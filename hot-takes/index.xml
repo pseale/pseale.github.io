@@ -6,7 +6,17 @@
     <description>Recent content on DevSecFailureOps</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 18 Mar 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://devsecfailureops.com/hot-takes/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 05 Apr 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://devsecfailureops.com/hot-takes/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Terraform Data Blocks: Ushering in the coming apocalypse</title>
+      <link>https://devsecfailureops.com/hot-takes/posts/terraform-data-blocks-for-dummies/</link>
+      <pubDate>Tue, 05 Apr 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://devsecfailureops.com/hot-takes/posts/terraform-data-blocks-for-dummies/</guid>
+      <description>Spicy Peppers Rating System | 🌶 | One Pepper: Bold and Zesty; Potentially Misinformation Summary: Terraform for Dummies You (yes, you) are the dummy if you&amp;rsquo;re using Terraform&amp;rsquo;s data blocks. Every resource that relies on a data block is in danger of being replaced because the data block is read during apply, and any resource dependent on that data block will be replaced (forces replacement).
+Sounds apocalyptic, right? Yes, it is.</description>
+    </item>
+    
     <item>
       <title>Command Palettes (Omnisearch) Everywhere</title>
       <link>https://devsecfailureops.com/hot-takes/posts/command-palette-everywhere/</link>

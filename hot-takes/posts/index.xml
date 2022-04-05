@@ -13,8 +13,8 @@
       <pubDate>Tue, 05 Apr 2022 00:00:00 +0000</pubDate>
       
       <guid>https://devsecfailureops.com/hot-takes/posts/terraform-data-block-apocalypse/</guid>
-      <description>Spicy Peppers Rating System | 🌶 | One Pepper: Bold and Zesty; Potentially Misinformation Summary: Data Blocks for Dummies You (yes, you) are the dummy if you&amp;rsquo;re using Terraform&amp;rsquo;s data blocks. Every resource that relies on a data block is in danger of being replaced, because data blocks are evaluated after apply. It&amp;rsquo;s just a matter of time.
-Sounds apocalyptic, right? Yes, it is. And sure, my infrastructure is resilient! But let&amp;rsquo;s not delete the entire Kubernetes cluster, okay?</description>
+      <description>Spicy Peppers Rating System | 🌶 | One Pepper: Bold and Zesty; Potentially Misinformation Summary: Data Blocks for Dummies Data blocks for dummies may be explained as follows: you are the dummy if you&amp;rsquo;re using Terraform&amp;rsquo;s data blocks. Every resource that relies on a data block is in danger of being replaced, because data blocks are evaluated after apply. It&amp;rsquo;s just a matter of time.
+I know the summary above didn&amp;rsquo;t make sense, so read on.</description>
     </item>
     
     <item>

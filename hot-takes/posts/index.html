@@ -13,10 +13,10 @@
     
     <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Posts"/>
-<meta name="twitter:description" content="The intersection of Dev, InfoSec, Operations, and mortifying, pervasive Failure"/>
+<meta name="twitter:description" content="DevSecFailureOps: the intersection of Development, InfoSec, Operations, and also mortifying, pervasive Failure"/>
 
     <meta property="og:title" content="Posts" />
-<meta property="og:description" content="The intersection of Dev, InfoSec, Operations, and mortifying, pervasive Failure" />
+<meta property="og:description" content="DevSecFailureOps: the intersection of Development, InfoSec, Operations, and also mortifying, pervasive Failure" />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://devsecfailureops.com/hot-takes/posts/" />
 
@@ -24,9 +24,16 @@
 
     <style>
        
+
+      body {
+        font-size: 16px;
+      }
+
+      h2 {
+        margin-bottom: 0;
+      }
       a h2.post-title {
         text-decoration: underline;
-        margin-bottom: 0;
       }
 
       li.posts-list-item {
@@ -48,7 +55,7 @@
       <nav class="app-header-menu">
           <a class="app-header-menu-item" href="/hot-takes/posts/standard-disclaimer">Standard disclaimer</a>
       </nav>
-      <p>The intersection of Dev, InfoSec, Operations, and mortifying, pervasive Failure</p>
+      <p>DevSecFailureOps: the intersection of Development, InfoSec, Operations, and also mortifying, pervasive Failure</p>
       <div class="app-header-social">
         
           <a href="https://github.com/pseale" target="_blank" rel="noreferrer noopener">
@@ -89,8 +96,7 @@
             <div class="post-content">
               <h5 id="spicy-peppers-rating-system----one-pepper-bold-and-zesty-potentially-misinformation">Spicy Peppers Rating System | 🌶 | One Pepper: Bold and Zesty; Potentially Misinformation</h5>
 <h3 id="summary-data-blocks-for-dummies">Summary: Data Blocks for Dummies</h3>
-<p>You (yes, <strong>you</strong>) are the dummy if you&rsquo;re using Terraform&rsquo;s <code>data</code> blocks. Every resource that relies on a data block is in danger of being replaced, because data blocks are evaluated after apply. It&rsquo;s just a matter of time.</p>
-<p>Sounds apocalyptic, right? Yes, it is. And sure, my infrastructure is resilient! But let&rsquo;s not delete <strong>the entire Kubernetes cluster</strong>, okay?</p>
+<p>Data blocks for dummies may be explained as follows: <strong>you</strong> are the dummy if you&rsquo;re using Terraform&rsquo;s <code>data</code> blocks. Every resource that relies on a data block is in danger of being replaced, because data blocks are evaluated after apply. It&rsquo;s just a matter of time.</p>
 <p>I know the summary above didn&rsquo;t make sense, so read on.</p>
 <h3 id="data-blocks-explained">Data blocks explained</h3>
 <p>Data blocks, or <a href="https://www.terraform.io/language/data-sources">Data sources</a> in Hashicorp&rsquo;s parlance, are conveniences that allow you to get at information. I&rsquo;ll refer to them as data blocks because in the code they are a <code>data {}</code> block. Hashicorp docs provide a <a href="https://www.terraform.io/language/data-sources">a good overview</a>.</p>
@@ -98,9 +104,9 @@
 <h3 id="the-danger-by-example">The danger, by example</h3>
 <p><a href="https://github.com/hashicorp/terraform/issues/28377">This remarkably friendly GitHub issue</a> details the danger better than I can. But I&rsquo;ll try anyway.</p>
 <p>Let&rsquo;s start with something fun and simple. Let&rsquo;s start in the happy land of Not Relying On Data Blocks.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-hcl" data-lang="hcl"><span style="color:#75715e">##
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-hcl" data-lang="hcl"><span style="color:#75715e">######################################
 </span><span style="color:#75715e">## Innocent and Pure: Not Relying On Data Blocks
-</span><span style="color:#75715e">##
+</span><span style="color:#75715e">######################################
 </span><span style="color:#75715e">
 </span><span style="color:#75715e"># resource group already exists
 </span><span style="color:#75715e"></span>
@@ -112,10 +118,10 @@
 </span><span style="color:#75715e">  # ... (details omitted)
 </span><span style="color:#75715e"></span>}
 </code></pre></div><p>This works great for a single resource! Great work&ndash;you&rsquo;re the best!</p>
-<p>So here&rsquo;s what we did next, when we realized we needed to reference the resource group name and location a bunch of times. So convenient! Let&rsquo;s call this scenario Impending Doom. This example is flawed, but <strong>assume</strong> the data block is needed. You can think up a real example. Like all those places you do it in your own terraform!</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-hcl" data-lang="hcl"><span style="color:#75715e">##
+<p>So here&rsquo;s what we did next, when we realized we needed to reference the resource group name and location a bunch of times. So convenient! Let&rsquo;s call this scenario Impending Doom. This example is flawed, but <strong>assume</strong> the data block is needed. You can think up a real example. Examples are easy to find&ndash;just look anywhere in your own terraform!</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-hcl" data-lang="hcl"><span style="color:#75715e">######################################
 </span><span style="color:#75715e">## Impending doom
-</span><span style="color:#75715e">##
+</span><span style="color:#75715e">######################################
 </span><span style="color:#75715e">
 </span><span style="color:#75715e"># resource group already exists
 </span><span style="color:#75715e"></span><span style="color:#66d9ef">data</span> <span style="color:#e6db74">&#34;azurerm_resource_group&#34; &#34;example&#34;</span> {
@@ -130,12 +136,12 @@
 </span><span style="color:#75715e">
 </span><span style="color:#75715e">  # ... (details omitted)
 </span><span style="color:#75715e"></span>}
-</code></pre></div><p>There&rsquo;s a few things wrong here. First: why did we make a data block in the first place? Why didn&rsquo;t we just reference <code>var.resource_group_name</code> and <code>var.resource_group_location</code> directly? Look, this is an example. Play along. I don&rsquo;t know, use your imagination.</p>
-<p>Second: while this works perfectly on the initial <code>terraform apply</code>, danger looms! Danger ahead!</p>
+</code></pre></div><p>There are a few things wrong here. First: again, the data block is unnecessary in the example above, but imagine you did need the data block.</p>
+<p>Second: while this works perfectly on the initial <code>terraform apply</code>, you are now in danger of replacing that resource at any moment.</p>
 <p>Here&rsquo;s what <code>terraform plan</code> looks like some time in the future:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-hcl" data-lang="hcl"><span style="color:#75715e">##
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-hcl" data-lang="hcl"><span style="color:#75715e">######################################
 </span><span style="color:#75715e">## Your Doom - terraform plan output
-</span><span style="color:#75715e">##
+</span><span style="color:#75715e">######################################
 </span><span style="color:#75715e">
 </span><span style="color:#75715e"># resource.azurerm_storage_account.example must be replaced
 </span><span style="color:#75715e"></span><span style="color:#960050;background-color:#1e0010">-/+</span> <span style="color:#66d9ef">resource</span> <span style="color:#e6db74">&#34;azurerm_storage_account&#34; &#34;example&#34;</span> {
@@ -155,11 +161,16 @@
 <li>So as a result of you using a data block, which you did for just a little extra convenience, terraform wants to replace <strong>the entire Kubernetes cluster</strong>.</li>
 <li>Though I haven&rsquo;t tested it, according to the GitHub Issue at <a href="https://github.com/hashicorp/terraform/issues/28377">https://github.com/hashicorp/terraform/issues/28377</a> - terraform is <strong>not</strong> bluffing and will indeed replace all your stuff.</li>
 </ol>
+<p>If my frenzied, simplified, incoherent explanation didn&rsquo;t work for you, there are two authoritative answers on the GitHub Issue thread explaining what is truly happening:</p>
+<ul>
+<li><a href="https://github.com/hashicorp/terraform/issues/28377#issuecomment-820398608">First explanation</a></li>
+<li><a href="https://github.com/hashicorp/terraform/issues/28377#issuecomment-824070018">Second explanation</a></li>
+</ul>
 <h4 id="solution">Solution</h4>
 <p>My solution is to stop using data blocks. Here&rsquo;s the fixed example:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-hcl" data-lang="hcl"><span style="color:#75715e">##
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-hcl" data-lang="hcl"><span style="color:#75715e">######################################
 </span><span style="color:#75715e">## The Path of Enlightenment: Not Relying On Data Blocks
-</span><span style="color:#75715e">##
+</span><span style="color:#75715e">######################################
 </span><span style="color:#75715e">
 </span><span style="color:#75715e"># resource group already exists
 </span><span style="color:#75715e"></span>
@@ -179,6 +190,8 @@
 <li>AM I CRAZY!!?!?!????! HAVE I GONE INSANE!?!???!? AM I ALONE IN THIS STRUGGLE!?!????? I wrote this post as a way of trying to figure out if I&rsquo;m doing something horribly wrong. Am I? Is there an easier way to resolve this problem? Am I making faulty assumptions? Let me know. I am very experienced in the art of making bad assumptions and as a result, wasting hours of my own time.</li>
 </ol>
 <p>Seriously, let me know if I&rsquo;m doing something wrong.</p>
+<h4 id="final-note-about-modules-data-blocks-and-depends_on">Final note about modules, data blocks, and depends_on</h4>
+<p>According to the GitHub Issue <a href="https://github.com/hashicorp/terraform/issues/28377">https://github.com/hashicorp/terraform/issues/28377</a>, this problem is caused by specific interactions between data blocks, modules, and depends_on. I guess? Given how many times I&rsquo;ve run into this&ndash;something&rsquo;s deeply wrong?</p>
 
             </div>
             <div class="post-footer">

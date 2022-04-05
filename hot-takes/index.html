@@ -70,8 +70,122 @@
     <main class="app-container">
       
   <div>
-    <h1>DevSecFailureOps</h1>
     <ul class="posts-list">
+      
+        <li class="posts-list-item">
+          <article class="post">
+            <header class="post-header">
+              <a class="posts-list-item-title" href="https://devsecfailureops.com/hot-takes/posts/terraform-data-block-apocalypse/"><h2 class ="post-title">Terraform Data Blocks: Ushering in the coming apocalypse</h2></a>
+              <div class="post-meta">
+                <div>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-calendar">
+  <title>calendar</title>
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line>
+</svg>
+                  Apr 5, 2022
+                </div>
+              </div>
+            </header>
+            <div class="post-content">
+              <h5 id="spicy-peppers-rating-system----one-pepper-bold-and-zesty-potentially-misinformation">Spicy Peppers Rating System | 🌶 | One Pepper: Bold and Zesty; Potentially Misinformation</h5>
+<h3 id="summary-data-blocks-for-dummies">Summary: Data Blocks for Dummies</h3>
+<p>You (yes, <strong>you</strong>) are the dummy if you&rsquo;re using Terraform&rsquo;s <code>data</code> blocks. Every resource that relies on a data block is in danger of being replaced, because data blocks are evaluated after apply. It&rsquo;s just a matter of time.</p>
+<p>Sounds apocalyptic, right? Yes, it is. And sure, my infrastructure is resilient! But let&rsquo;s not delete <strong>the entire Kubernetes cluster</strong>, okay?</p>
+<p>I know the summary above didn&rsquo;t make sense, so read on.</p>
+<h3 id="data-blocks-explained">Data blocks explained</h3>
+<p>Data blocks, or <a href="https://www.terraform.io/language/data-sources">Data sources</a> in Hashicorp&rsquo;s parlance, are conveniences that allow you to get at information. I&rsquo;ll refer to them as data blocks because in the code they are a <code>data {}</code> block. Hashicorp docs provide a <a href="https://www.terraform.io/language/data-sources">a good overview</a>.</p>
+<p>As I&rsquo;ve discovered, data blocks are convenient right up until Terraform wants to replace <strong>the entire Kubernetes cluster</strong>. Did I mention it was <strong>the entire Kubernetes cluster</strong>? Not a node pool, no, <strong>the entire Kubernetes cluster</strong>.</p>
+<h3 id="the-danger-by-example">The danger, by example</h3>
+<p><a href="https://github.com/hashicorp/terraform/issues/28377">This remarkably friendly GitHub issue</a> details the danger better than I can. But I&rsquo;ll try anyway.</p>
+<p>Let&rsquo;s start with something fun and simple. Let&rsquo;s start in the happy land of Not Relying On Data Blocks.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-hcl" data-lang="hcl"><span style="color:#75715e">##
+</span><span style="color:#75715e">## Innocent and Pure: Not Relying On Data Blocks
+</span><span style="color:#75715e">##
+</span><span style="color:#75715e">
+</span><span style="color:#75715e"># resource group already exists
+</span><span style="color:#75715e"></span>
+<span style="color:#66d9ef">resource</span> <span style="color:#e6db74">&#34;azurerm_storage_account&#34; &#34;example&#34;</span> {<span style="color:#75715e">
+</span><span style="color:#75715e">  # note resource group and location are hardcoded strings - potential DRY violation!!! Call the cops
+</span><span style="color:#75715e"></span>  resource_group_name      <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;existing-resource-group&#34;</span>
+  location                 <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;West Europe&#34;</span><span style="color:#75715e">
+</span><span style="color:#75715e">
+</span><span style="color:#75715e">  # ... (details omitted)
+</span><span style="color:#75715e"></span>}
+</code></pre></div><p>This works great for a single resource! Great work&ndash;you&rsquo;re the best!</p>
+<p>So here&rsquo;s what we did next, when we realized we needed to reference the resource group name and location a bunch of times. So convenient! Let&rsquo;s call this scenario Impending Doom. This example is flawed, but <strong>assume</strong> the data block is needed. You can think up a real example. Like all those places you do it in your own terraform!</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-hcl" data-lang="hcl"><span style="color:#75715e">##
+</span><span style="color:#75715e">## Impending doom
+</span><span style="color:#75715e">##
+</span><span style="color:#75715e">
+</span><span style="color:#75715e"># resource group already exists
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">data</span> <span style="color:#e6db74">&#34;azurerm_resource_group&#34; &#34;example&#34;</span> {
+  name      <span style="color:#f92672">=</span> <span style="color:#66d9ef">var</span>.<span style="color:#66d9ef">resource_group_name</span>
+  location  <span style="color:#f92672">=</span> <span style="color:#66d9ef">var</span>.<span style="color:#66d9ef">resource_group_location</span>
+}
+
+<span style="color:#66d9ef">resource</span> <span style="color:#e6db74">&#34;azurerm_storage_account&#34; &#34;example&#34;</span> {<span style="color:#75715e">
+</span><span style="color:#75715e">  # note resource group and location are bound to data block properties
+</span><span style="color:#75715e"></span>  resource_group_name      <span style="color:#f92672">=</span> <span style="color:#66d9ef">data</span>.<span style="color:#66d9ef">azurerm_resource_group</span>.<span style="color:#66d9ef">example</span>.<span style="color:#66d9ef">name</span>
+  location                 <span style="color:#f92672">=</span> <span style="color:#66d9ef">data</span>.<span style="color:#66d9ef">azurerm_resource_group</span>.<span style="color:#66d9ef">example</span>.<span style="color:#66d9ef">location</span><span style="color:#75715e">
+</span><span style="color:#75715e">
+</span><span style="color:#75715e">  # ... (details omitted)
+</span><span style="color:#75715e"></span>}
+</code></pre></div><p>There&rsquo;s a few things wrong here. First: why did we make a data block in the first place? Why didn&rsquo;t we just reference <code>var.resource_group_name</code> and <code>var.resource_group_location</code> directly? Look, this is an example. Play along. I don&rsquo;t know, use your imagination.</p>
+<p>Second: while this works perfectly on the initial <code>terraform apply</code>, danger looms! Danger ahead!</p>
+<p>Here&rsquo;s what <code>terraform plan</code> looks like some time in the future:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-hcl" data-lang="hcl"><span style="color:#75715e">##
+</span><span style="color:#75715e">## Your Doom - terraform plan output
+</span><span style="color:#75715e">##
+</span><span style="color:#75715e">
+</span><span style="color:#75715e"># resource.azurerm_storage_account.example must be replaced
+</span><span style="color:#75715e"></span><span style="color:#960050;background-color:#1e0010">-/+</span> <span style="color:#66d9ef">resource</span> <span style="color:#e6db74">&#34;azurerm_storage_account&#34; &#34;example&#34;</span> {
+  location                 <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;West Europe&#34;</span> <span style="color:#960050;background-color:#1e0010">-&gt;</span> (<span style="color:#66d9ef">known</span> <span style="color:#66d9ef">after</span> <span style="color:#66d9ef">apply</span>)<span style="color:#75715e"> # forces replacement
+</span><span style="color:#75715e">
+</span><span style="color:#75715e">  # ... (omitted)
+</span><span style="color:#75715e"></span>}
+</code></pre></div><p>Congratulations, you&rsquo;re about to <strong>replace all your infrastructure</strong>!</p>
+<h4 id="explanation">Explanation</h4>
+<p>So let&rsquo;s walk through what happened, to the best of my understanding.</p>
+<ol>
+<li>On first apply, when standing up the infrastructure from scratch, there are no problems.</li>
+<li>On further applies, assuming nothing else has changed with the resource in question, there are no problems.</li>
+<li>But on Doomsday, something in your infrastructure changes. (Honestly, details TBD&ndash;I&rsquo;m still not sure what triggers this.)</li>
+<li>On Doomsday, terraform attempts to plan the difference between your HCL and reality. And when it evaluates the <code>location</code> property, it cannot evaluate the results of the <code>data</code> block, because <strong>data blocks are evaluated during apply</strong>. Let that sink in. Data blocks are not evaluated during plan, but during apply. Not during plan. Not during plan. Am I crazy? Not during plan, but during apply.</li>
+<li>Because it does not know the value of the (honestly truly important) <code>location</code> property, it doesn&rsquo;t know if the location&rsquo;s going to change, and makes a plan assuming it will change. So, to use Terraform&rsquo;s terminology, because it relies on a property <code>known after apply</code>, this <code>forces replacement</code>.</li>
+<li>So as a result of you using a data block, which you did for just a little extra convenience, terraform wants to replace <strong>the entire Kubernetes cluster</strong>.</li>
+<li>Though I haven&rsquo;t tested it, according to the GitHub Issue at <a href="https://github.com/hashicorp/terraform/issues/28377">https://github.com/hashicorp/terraform/issues/28377</a> - terraform is <strong>not</strong> bluffing and will indeed replace all your stuff.</li>
+</ol>
+<h4 id="solution">Solution</h4>
+<p>My solution is to stop using data blocks. Here&rsquo;s the fixed example:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-hcl" data-lang="hcl"><span style="color:#75715e">##
+</span><span style="color:#75715e">## The Path of Enlightenment: Not Relying On Data Blocks
+</span><span style="color:#75715e">##
+</span><span style="color:#75715e">
+</span><span style="color:#75715e"># resource group already exists
+</span><span style="color:#75715e"></span>
+<span style="color:#66d9ef">resource</span> <span style="color:#e6db74">&#34;azurerm_storage_account&#34; &#34;example&#34;</span> {<span style="color:#75715e">
+</span><span style="color:#75715e">  # note resource group and location are hardcoded strings - this is ok because the alternative (using a data block) is worse
+</span><span style="color:#75715e"></span>  resource_group_name      <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;existing-resource-group&#34;</span>
+  location                 <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;West Europe&#34;</span><span style="color:#75715e">
+</span><span style="color:#75715e">
+</span><span style="color:#75715e">  # ... (details omitted)
+</span><span style="color:#75715e"></span>}
+</code></pre></div><p>Before enlightmentment: chop wood, carry water. After enlightenment: chop wood, carry water.</p>
+<h4 id="political-advocacy-and-a-cry-for-help">Political Advocacy and a cry for help</h4>
+<p>I have several things to say:</p>
+<ol>
+<li>Political advocacy: I blame HashiCorp for casually tossing data blocks around in the documentation. Put a stern warning in there, Hashicorp. These things are <em>productivity landmines</em>.</li>
+<li>Hashicorp: seriously, this is a nightmare. <code>terraform validate</code> should warn me for every single data block I use. Sure, some data blocks can be used safely, as can some sticks of dynamite. But let&rsquo;s put some guardrails on these things, okay?</li>
+<li>AM I CRAZY!!?!?!????! HAVE I GONE INSANE!?!???!? AM I ALONE IN THIS STRUGGLE!?!????? I wrote this post as a way of trying to figure out if I&rsquo;m doing something horribly wrong. Am I? Is there an easier way to resolve this problem? Am I making faulty assumptions? Let me know. I am very experienced in the art of making bad assumptions and as a result, wasting hours of my own time.</li>
+</ol>
+<p>Seriously, let me know if I&rsquo;m doing something wrong.</p>
+
+            </div>
+            <div class="post-footer">
+              
+            </div>
+          </article>
+        </li>
       
         <li class="posts-list-item">
           <article class="post">
@@ -83,7 +197,7 @@
   <title>calendar</title>
   <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line>
 </svg>
-                  Feb 1, 2021
+                  Apr 1, 2022
                 </div>
               </div>
             </header>
@@ -227,6 +341,72 @@ wsl --exec echo <span style="color:#e6db74">&#34;WSL Distro: </span><span style=
         <li class="posts-list-item">
           <article class="post">
             <header class="post-header">
+              <a class="posts-list-item-title" href="https://devsecfailureops.com/hot-takes/posts/command-palette-everywhere/"><h2 class ="post-title">Command Palettes (Omnisearch) Everywhere</h2></a>
+              <div class="post-meta">
+                <div>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-calendar">
+  <title>calendar</title>
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line>
+</svg>
+                  Mar 18, 2022
+                </div>
+              </div>
+            </header>
+            <div class="post-content">
+              <h5 id="spicy-peppers-rating-system----zero-peppers-inoffensive-and-sincere">Spicy Peppers Rating System | 🚫 | Zero Peppers: Inoffensive and Sincere</h5>
+<h3 id="summary">Summary</h3>
+<ol>
+<li>Command Palettes let you search for and run commands by descriptive name.</li>
+<li>Thus for rare or obscure tasks, using the Command Palette is much easier than hunting down commands in <code>Nested-&gt;Edit-&gt;Menus</code> or memorizing arcane key chords. This is a big productivity boost, and I&rsquo;m the only person I know who does this. You people are doing it all wrong! &ldquo;You people are doing it all wrong&rdquo; is generally true, <em>but I digress.</em></li>
+<li>Command Palettes are in every major text editor and IDE.</li>
+<li>They&rsquo;re also in weird places like Windows Terminal and Chrome Developer Tools.</li>
+</ol>
+<h3 id="by-example">By example</h3>
+<p>In VS Code, I sometimes run <code>&gt;Format Document</code>. I know this is available through either a deeply nested <code>File-&gt;Etc</code> menu or a hotkey.</p>
+<p>In the case of <code>Format Document</code>, it is apparently bound by default to <code>ALT</code>+<code>SHIFT</code>+<code>F</code>. Reasonable, but unmemorable for something I do rarely in my part-time text editor. In days of yore, I might have tried to memorize this keybind! Or worse, ｃｕｓｔｏｍｉｚｅ ｍｙ ｋｅｙｂｉｎｄｓ!</p>
+<p>But now that I&rsquo;ve acclimated to relying on Command Palettes, I&rsquo;ll open the Command Palette, lazily type a few letters of <code>format</code>, lazily arrow up and down, lazily press <code>ENTER</code>, lazily be done with it. And all effortlessly, without expending my precious brain energy!</p>
+<h3 id="command-palettes-give-your-brain-a-break">Command Palettes: Give your brain a break</h3>
+<p><code>Format Document</code> is just one example of something I do once a month or so. I&rsquo;ve also messed with BOM encodings via <code>Change File Encoding</code>, fiddled with with line endings via <code>Change End of Line Sequence</code>, and even used the <code>Fold</code> command to collapse some XML that one time!</p>
+<p>In Windows Terminal, I&rsquo;ve split the terminal pane so I could watch several things at once. Thanks to the Command Palette, I didn&rsquo;t have to hunt down the settings and memorize <code>ALT</code>+<code>SHIFT</code>+<code>+</code>. Instead, I put my brain on vacation, opened the Command Palette, searched for <code>split</code>, ran it, and moved on with my life.</p>
+<h3 id="your-ide-and-you">Your IDE and You</h3>
+<p>Command Palettes are available in:</p>
+<ol>
+<li><a href="https://docs.sublimetext.io/guide/extensibility/command_palette.html">Sublime Text</a> - the original!</li>
+<li><a href="https://code.visualstudio.com/docs/getstarted/userinterface#_command-palette">VS Code</a> - VS Code did a great job harvesting Sublime Text&rsquo;s best features, and the Command Palette is one such feature. Well done, thieves!</li>
+<li><a href="https://docs.microsoft.com/en-us/visualstudio/ide/visual-studio-search?view=vs-2019">Visual Studio</a> - here it is called Search</li>
+<li><a href="https://www.jetbrains.com/help/rider/Navigating_to_Action.html">JetBrains Products</a> - here it is available through either Find Action, or Search Everywhere&ndash;either will do the trick</li>
+<li><a href="https://developer.chrome.com/docs/devtools/command-menu/">Google Chrome Dev Tools</a> - here it is called Command Menu</li>
+<li><a href="https://docs.microsoft.com/en-us/windows/terminal/command-palette">Windows Terminal</a> - as weird as it sounds, the Command Palette exists here!</li>
+<li><a href="https://superuser.com/q/671149">Vim</a> - as with all things Vim, there are many paths up the mountain, none of which is the &lsquo;true&rsquo; one. Vim plugin universalism: you heard it here first.</li>
+</ol>
+<h3 id="command-palette-conventions">Command Palette Conventions</h3>
+<ol>
+<li>I have the Command Palette bound to <code>CTRL</code>+<code>SHIFT</code>+<code>P</code> everywhere. This is already the default keybind in many places. MacOS users: as with all things, mentally replace <code>CTRL</code> with <code>CMD</code>.</li>
+<li>Similarly, <code>CTRL</code>+<code>P</code> should navigate to files. MacOS: <code>CMD</code>+<code>P</code>.</li>
+<li>Command Palettes support a kind of forgiving fuzzy search<!-- raw HTML omitted -->[1]<!-- raw HTML omitted --> syntax and a convenient dropdown list of commands. If you&rsquo;ve never seen this before, the key word here is <strong>fuzzy</strong>. It&rsquo;s fuzzy search. It&rsquo;s not strict.</li>
+<li>The Command Palette shows keybinds (if any exist) for the command. Use the Command Palette like a cheatsheet.</li>
+<li>VS Code, JetBrains, and Google Chrome support mode swapping through the addition or removal of the <code>&gt;</code> prefix. So, by example:
+<ul>
+<li>Searching for <code>&gt;format</code> gives the <code>Format Document</code> command</li>
+<li>Searching for <code>format</code> without the <code>&gt;</code> prefix gives <code>formatter.js</code>.</li>
+</ul>
+</li>
+</ol>
+<h4 id="footnotes">Footnotes:</h4>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted -->
+[1] Is Command Palette fuzzy search fuzzy like <code>fzf</code>? Who can say? Not I! Not I.
+<!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+
+            </div>
+            <div class="post-footer">
+              
+            </div>
+          </article>
+        </li>
+      
+        <li class="posts-list-item">
+          <article class="post">
+            <header class="post-header">
               <a class="posts-list-item-title" href="https://devsecfailureops.com/hot-takes/posts/standard-disclaimer/"><h2 class ="post-title">Standard Disclaimer</h2></a>
               <div class="post-meta">
                 <div>
@@ -296,187 +476,6 @@ wsl --exec echo <span style="color:#e6db74">&#34;WSL Distro: </span><span style=
 
 
 
-
-            </div>
-            <div class="post-footer">
-              
-            </div>
-          </article>
-        </li>
-      
-        <li class="posts-list-item">
-          <article class="post">
-            <header class="post-header">
-              <a class="posts-list-item-title" href="https://devsecfailureops.com/hot-takes/posts/command-palette-everywhere/"><h2 class ="post-title">Command Palettes (Omnisearch) Everywhere</h2></a>
-              <div class="post-meta">
-                <div>
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-calendar">
-  <title>calendar</title>
-  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line>
-</svg>
-                  Mar 18, 2022
-                </div>
-              </div>
-            </header>
-            <div class="post-content">
-              <h5 id="spicy-peppers-rating-system----zero-peppers-inoffensive-and-sincere">Spicy Peppers Rating System | 🚫 | Zero Peppers: Inoffensive and Sincere</h5>
-<h3 id="summary">Summary</h3>
-<ol>
-<li>Command Palettes let you search for and run commands by descriptive name.</li>
-<li>Thus for rare or obscure tasks, using the Command Palette is much easier than hunting down commands in <code>Nested-&gt;Edit-&gt;Menus</code> or memorizing arcane key chords. This is a big productivity boost, and I&rsquo;m the only person I know who does this. You people are doing it all wrong! &ldquo;You people are doing it all wrong&rdquo; is generally true, <em>but I digress.</em></li>
-<li>Command Palettes are in every major text editor and IDE.</li>
-<li>They&rsquo;re also in weird places like Windows Terminal and Chrome Developer Tools.</li>
-</ol>
-<h3 id="by-example">By example</h3>
-<p>In VS Code, I sometimes run <code>&gt;Format Document</code>. I know this is available through either a deeply nested <code>File-&gt;Etc</code> menu or a hotkey.</p>
-<p>In the case of <code>Format Document</code>, it is apparently bound by default to <code>ALT</code>+<code>SHIFT</code>+<code>F</code>. Reasonable, but unmemorable for something I do rarely in my part-time text editor. In days of yore, I might have tried to memorize this keybind! Or worse, ｃｕｓｔｏｍｉｚｅ ｍｙ ｋｅｙｂｉｎｄｓ!</p>
-<p>But now that I&rsquo;ve acclimated to relying on Command Palettes, I&rsquo;ll open the Command Palette, lazily type a few letters of <code>format</code>, lazily arrow up and down, lazily press <code>ENTER</code>, lazily be done with it. And all effortlessly, without expending my precious brain energy!</p>
-<h3 id="command-palettes-give-your-brain-a-break">Command Palettes: Give your brain a break</h3>
-<p><code>Format Document</code> is just one example of something I do once a month or so. I&rsquo;ve also messed with BOM encodings via <code>Change File Encoding</code>, fiddled with with line endings via <code>Change End of Line Sequence</code>, and even used the <code>Fold</code> command to collapse some XML that one time!</p>
-<p>In Windows Terminal, I&rsquo;ve split the terminal pane so I could watch several things at once. Thanks to the Command Palette, I didn&rsquo;t have to hunt down the settings and memorize <code>ALT</code>+<code>SHIFT</code>+<code>+</code>. Instead, I put my brain on vacation, opened the Command Palette, searched for <code>split</code>, ran it, and moved on with my life.</p>
-<h3 id="your-ide-and-you">Your IDE and You</h3>
-<p>Command Palettes are available in:</p>
-<ol>
-<li><a href="https://docs.sublimetext.io/guide/extensibility/command_palette.html">Sublime Text</a> - the original!</li>
-<li><a href="https://code.visualstudio.com/docs/getstarted/userinterface#_command-palette">VS Code</a> - VS Code did a great job harvesting Sublime Text&rsquo;s best features, and the Command Palette is one such feature. Well done, thieves!</li>
-<li><a href="https://docs.microsoft.com/en-us/visualstudio/ide/visual-studio-search?view=vs-2019">Visual Studio</a> - here it is called Search</li>
-<li><a href="https://www.jetbrains.com/help/rider/Navigating_to_Action.html">JetBrains Products</a> - here it is available through either Find Action, or Search Everywhere&ndash;either will do the trick</li>
-<li><a href="https://developer.chrome.com/docs/devtools/command-menu/">Google Chrome Dev Tools</a> - here it is called Command Menu</li>
-<li><a href="https://docs.microsoft.com/en-us/windows/terminal/command-palette">Windows Terminal</a> - as weird as it sounds, the Command Palette exists here!</li>
-<li><a href="https://superuser.com/q/671149">Vim</a> - as with all things Vim, there are many paths up the mountain, none of which is the &lsquo;true&rsquo; one. Vim plugin universalism: you heard it here first.</li>
-</ol>
-<h3 id="command-palette-conventions">Command Palette Conventions</h3>
-<ol>
-<li>I have the Command Palette bound to <code>CTRL</code>+<code>SHIFT</code>+<code>P</code> everywhere. This is already the default keybind in many places. MacOS users: as with all things, mentally replace <code>CTRL</code> with <code>CMD</code>.</li>
-<li>Similarly, <code>CTRL</code>+<code>P</code> should navigate to files. MacOS: <code>CMD</code>+<code>P</code>.</li>
-<li>Command Palettes support a kind of forgiving fuzzy search<!-- raw HTML omitted -->[1]<!-- raw HTML omitted --> syntax and a convenient dropdown list of commands. If you&rsquo;ve never seen this before, the key word here is <strong>fuzzy</strong>. It&rsquo;s fuzzy search. It&rsquo;s not strict.</li>
-<li>The Command Palette shows keybinds (if any exist) for the command. Use the Command Palette like a cheatsheet.</li>
-<li>VS Code, JetBrains, and Google Chrome support mode swapping through the addition or removal of the <code>&gt;</code> prefix. So, by example:
-<ul>
-<li>Searching for <code>&gt;format</code> gives the <code>Format Document</code> command</li>
-<li>Searching for <code>format</code> without the <code>&gt;</code> prefix gives <code>formatter.js</code>.</li>
-</ul>
-</li>
-</ol>
-<h4 id="footnotes">Footnotes:</h4>
-<p><!-- raw HTML omitted --><!-- raw HTML omitted -->
-[1] Is Command Palette fuzzy search fuzzy like <code>fzf</code>? Who can say? Not I! Not I.
-<!-- raw HTML omitted --><!-- raw HTML omitted --></p>
-
-            </div>
-            <div class="post-footer">
-              
-            </div>
-          </article>
-        </li>
-      
-        <li class="posts-list-item">
-          <article class="post">
-            <header class="post-header">
-              <a class="posts-list-item-title" href="https://devsecfailureops.com/hot-takes/posts/terraform-data-blocks-for-dummies/"><h2 class ="post-title">Terraform Data Blocks: Ushering in the coming apocalypse</h2></a>
-              <div class="post-meta">
-                <div>
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-calendar">
-  <title>calendar</title>
-  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line>
-</svg>
-                  Apr 5, 2022
-                </div>
-              </div>
-            </header>
-            <div class="post-content">
-              <h5 id="spicy-peppers-rating-system----one-pepper-bold-and-zesty-potentially-misinformation">Spicy Peppers Rating System | 🌶 | One Pepper: Bold and Zesty; Potentially Misinformation</h5>
-<h3 id="summary-terraform-for-dummies">Summary: Terraform for Dummies</h3>
-<p>You (yes, <strong>you</strong>) are the dummy if you&rsquo;re using Terraform&rsquo;s <code>data</code> blocks. Every resource that relies on a data block is in danger of being <code>replaced</code> because the data block is <code>read during apply</code>, and any resource dependent on that data block will be replaced (<code>forces replacement</code>).</p>
-<p>Sounds apocalyptic, right? Yes, it is. Sure, my infrastructure is resilient! But let&rsquo;s not delete <strong>the entire Kubernetes cluster</strong>, okay?</p>
-<p>I know the summary above didn&rsquo;t make sense, so read on.</p>
-<h3 id="data-blocks-explained">Data blocks explained</h3>
-<p>Data blocks, or <a href="https://www.terraform.io/language/data-sources">Data sources</a> in Hashicorp&rsquo;s parlance, are conveniences that allow you to get at information. I&rsquo;ll refer to them as data blocks because in the code they are a <code>data {}</code> block. For a better explanation, read the <a href="https://www.terraform.io/language/data-sources">Hashicorp docs</a>&ndash;they&rsquo;re pretty good.</p>
-<p>As I&rsquo;ve discovered, data blocks are convenient right up until Terraform wants to replace <strong>the entire Kubernetes cluster</strong>. Did I mention it was <strong>the entire Kubernetes cluster</strong>? Not a node pool, no, <strong>the entire Kubernetes cluster</strong>.</p>
-<h3 id="the-danger-by-example">The danger, by example</h3>
-<p><a href="https://github.com/hashicorp/terraform/issues/28377">This remarkably friendly GitHub issue</a> details the danger better than I can. But I&rsquo;ll try anyway.</p>
-<p>So let&rsquo;s start with something fun and simple. Let&rsquo;s start in the happy land of Not Relying On Data Blocks.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-hcl" data-lang="hcl"><span style="color:#75715e">##
-</span><span style="color:#75715e">## Innocent and Pure: Not Relying On Data Blocks
-</span><span style="color:#75715e">##
-</span><span style="color:#75715e">
-</span><span style="color:#75715e"># resource group already exists
-</span><span style="color:#75715e"></span>
-<span style="color:#66d9ef">resource</span> <span style="color:#e6db74">&#34;azurerm_storage_account&#34; &#34;example&#34;</span> {<span style="color:#75715e">
-</span><span style="color:#75715e">  # note resource group and location are hardcoded strings - potential DRY violation!!! Call the cops
-</span><span style="color:#75715e"></span>  resource_group_name      <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;existing-resource-group&#34;</span>
-  location                 <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;West Europe&#34;</span><span style="color:#75715e">
-</span><span style="color:#75715e">
-</span><span style="color:#75715e">  # ... (details omitted)
-</span><span style="color:#75715e"></span>}
-</code></pre></div><p>This works great for a single resource! Great work&ndash;you&rsquo;re the best!</p>
-<p>So here&rsquo;s what we did next, when we realized we needed to reference the resource group name and location a bunch of times. So convenient! Let&rsquo;s call this scenario Impending Doom.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-hcl" data-lang="hcl"><span style="color:#75715e">##
-</span><span style="color:#75715e">## Impending doom
-</span><span style="color:#75715e">##
-</span><span style="color:#75715e">
-</span><span style="color:#75715e"># resource group already exists
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">data</span> <span style="color:#e6db74">&#34;azurerm_resource_group&#34; &#34;example&#34;</span> {
-  name      <span style="color:#f92672">=</span> <span style="color:#66d9ef">var</span>.<span style="color:#66d9ef">resource_group_name</span>
-  location  <span style="color:#f92672">=</span> <span style="color:#66d9ef">var</span>.<span style="color:#66d9ef">resource_group_location</span>
-}
-
-<span style="color:#66d9ef">resource</span> <span style="color:#e6db74">&#34;azurerm_storage_account&#34; &#34;example&#34;</span> {<span style="color:#75715e">
-</span><span style="color:#75715e">  # note resource group and location are bound to data block properties
-</span><span style="color:#75715e"></span>  resource_group_name      <span style="color:#f92672">=</span> <span style="color:#66d9ef">data</span>.<span style="color:#66d9ef">azurerm_resource_group</span>.<span style="color:#66d9ef">example</span>.<span style="color:#66d9ef">name</span>
-  location                 <span style="color:#f92672">=</span> <span style="color:#66d9ef">data</span>.<span style="color:#66d9ef">azurerm_resource_group</span>.<span style="color:#66d9ef">example</span>.<span style="color:#66d9ef">location</span><span style="color:#75715e">
-</span><span style="color:#75715e">
-</span><span style="color:#75715e">  # ... (details omitted)
-</span><span style="color:#75715e"></span>}
-</code></pre></div><p>There&rsquo;s a few things wrong here. First: why did we make a data block in the first place? Why didn&rsquo;t we just reference <code>var.resource_group_name</code> and <code>var.resource_group_location</code> directly? Look, this is an example. Play along (<strong>or else</strong>). Assume we need to extract &hellip; data &hellip; from the data block. I don&rsquo;t know, use your imagination.</p>
-<p>Second: while this works perfectly on the initial <code>terraform apply</code>, danger looms! Danger ahead!</p>
-<p>Here&rsquo;s what <code>terraform plan</code> looks like some time in the future:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-hcl" data-lang="hcl"><span style="color:#75715e">##
-</span><span style="color:#75715e">## Your Doom - terraform plan output
-</span><span style="color:#75715e">##
-</span><span style="color:#75715e">
-</span><span style="color:#75715e"># resource.azurerm_storage_account.example must be replaced
-</span><span style="color:#75715e"></span><span style="color:#960050;background-color:#1e0010">-/+</span> <span style="color:#66d9ef">resource</span> <span style="color:#e6db74">&#34;azurerm_storage_account&#34; &#34;example&#34;</span> {
-  location                 <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;West Europe&#34;</span> <span style="color:#960050;background-color:#1e0010">-&gt;</span> (<span style="color:#66d9ef">known</span> <span style="color:#66d9ef">after</span> <span style="color:#66d9ef">apply</span>)<span style="color:#75715e"> # forces replacement
-</span><span style="color:#75715e">
-</span><span style="color:#75715e">  # ... (omitted)
-</span><span style="color:#75715e"></span>}
-</code></pre></div><p>Congratulations, you&rsquo;re about to <strong>replace all your infrastructure</strong>!</p>
-<h4 id="explanation">Explanation</h4>
-<p>So let&rsquo;s walk through what happened, to the best of my understanding.</p>
-<ol>
-<li>On first apply, when standing up the infrastructure from scratch, there are no problems.</li>
-<li>On further applies, assuming nothing else has changed with the resource in question, there are no problems.</li>
-<li>But on Doomsday, something in your infrastructure changes. (Honestly, details TBD&ndash;I&rsquo;m still not sure what triggers this.)</li>
-<li>On Doomsday, terraform attempts to plan the difference between your HCL and reality. And when it evaluates the <code>location</code> property, it cannot evaluate the results of the <code>data</code> block, because <strong>data blocks are evaluated during apply</strong>. Let that sink in. Data blocks are not evaluated during plan, but during apply. Not during plan. Not during plan. Am I crazy? Not during plan.</li>
-<li>Because it does not know the value of the (honestly truly important) <code>location</code> property, it doesn&rsquo;t know if the location&rsquo;s going to change, and makes a plan assuming it will change. So, to use Terraform&rsquo;s terminology, because it relies on a property <code>known after apply</code>, this <code>forces replacement</code>.</li>
-<li>So as a result of you using a data block, which you did for just a little extra convenience, terraform wants to replace <strong>the entire Kubernetes cluster</strong>.</li>
-<li>Though I haven&rsquo;t tested it, according to the GitHub Issue at <a href="https://github.com/hashicorp/terraform/issues/28377">https://github.com/hashicorp/terraform/issues/28377</a> - terraform is <strong>not</strong> bluffing and will indeed replace all your stuff.</li>
-</ol>
-<h4 id="solution">Solution</h4>
-<p>My solution is to stop using data blocks. Here&rsquo;s the fixed example:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-hcl" data-lang="hcl"><span style="color:#75715e">##
-</span><span style="color:#75715e">## The Path of Enlightenment: Not Relying On Data Blocks
-</span><span style="color:#75715e">##
-</span><span style="color:#75715e">
-</span><span style="color:#75715e"># resource group already exists
-</span><span style="color:#75715e"></span>
-<span style="color:#66d9ef">resource</span> <span style="color:#e6db74">&#34;azurerm_storage_account&#34; &#34;example&#34;</span> {<span style="color:#75715e">
-</span><span style="color:#75715e">  # note resource group and location are hardcoded strings - this is ok because the alternative (using a data block) is worse
-</span><span style="color:#75715e"></span>  resource_group_name      <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;existing-resource-group&#34;</span>
-  location                 <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;West Europe&#34;</span><span style="color:#75715e">
-</span><span style="color:#75715e">
-</span><span style="color:#75715e">  # ... (details omitted)
-</span><span style="color:#75715e"></span>}
-</code></pre></div><p>Before enlightmentment: chop wood, carry water. After enlightenment: chop wood, carry water.</p>
-<h4 id="political-advocacy-and-a-cry-for-help">Political Advocacy and a cry for help</h4>
-<p>I have several things to say:</p>
-<ol>
-<li>Political advocacy: I blame HashiCorp for casually tossing data blocks around in the documentation. Put a stern warning in there, Hashicorp. These things are <strong>productivity landmines</strong>.</li>
-<li>Hashicorp: seriously, this is a nightmare. <code>terraform validate</code> should warn me for every single data block I use. Sure, some data blocks can be used safely, as can some sticks of dynamite. But let&rsquo;s put some guardrails on these things, okay?</li>
-<li>AM I CRAZY!!?!?!????! HAVE I GONE INSANE!?!???!? AM I ALONE IN THIS STRUGGLE!?!????? I wrote this post as a way of trying to figure out if I&rsquo;m doing something horribly wrong. Am I? Is there an easier way to resolve this problem? Am I making faulty assumptions? Let me know. I am very experienced in the art of making bad assumptions and as a result, wasting hours of my own time.</li>
-</ol>
-<p>Seriously, let me know if I&rsquo;m doing something wrong.</p>
 
             </div>
             <div class="post-footer">

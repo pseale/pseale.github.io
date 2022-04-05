@@ -9,12 +9,22 @@
     <lastBuildDate>Tue, 05 Apr 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://devsecfailureops.com/hot-takes/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Terraform Data Blocks: Ushering in the coming apocalypse</title>
-      <link>https://devsecfailureops.com/hot-takes/posts/terraform-data-blocks-for-dummies/</link>
+      <link>https://devsecfailureops.com/hot-takes/posts/terraform-data-block-apocalypse/</link>
       <pubDate>Tue, 05 Apr 2022 00:00:00 +0000</pubDate>
       
-      <guid>https://devsecfailureops.com/hot-takes/posts/terraform-data-blocks-for-dummies/</guid>
-      <description>Spicy Peppers Rating System | 🌶 | One Pepper: Bold and Zesty; Potentially Misinformation Summary: Terraform for Dummies You (yes, you) are the dummy if you&amp;rsquo;re using Terraform&amp;rsquo;s data blocks. Every resource that relies on a data block is in danger of being replaced because the data block is read during apply, and any resource dependent on that data block will be replaced (forces replacement).
-Sounds apocalyptic, right? Yes, it is.</description>
+      <guid>https://devsecfailureops.com/hot-takes/posts/terraform-data-block-apocalypse/</guid>
+      <description>Spicy Peppers Rating System | 🌶 | One Pepper: Bold and Zesty; Potentially Misinformation Summary: Data Blocks for Dummies You (yes, you) are the dummy if you&amp;rsquo;re using Terraform&amp;rsquo;s data blocks. Every resource that relies on a data block is in danger of being replaced, because data blocks are evaluated after apply. It&amp;rsquo;s just a matter of time.
+Sounds apocalyptic, right? Yes, it is. And sure, my infrastructure is resilient! But let&amp;rsquo;s not delete the entire Kubernetes cluster, okay?</description>
+    </item>
+    
+    <item>
+      <title>Expert WSL: soup-to-nuts</title>
+      <link>https://devsecfailureops.com/hot-takes/posts/expert-wsl/</link>
+      <pubDate>Fri, 01 Apr 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://devsecfailureops.com/hot-takes/posts/expert-wsl/</guid>
+      <description>Spicy Peppers Rating System | 🚫 | Zero Peppers: Mild and Nutritious; Blandly Educational Covered here:
+ what WSL is, and how to install it astonishingly useful WSL tips ugly network troubleshooting boring, specialized topics that target 1% of you. 99% of you will be totally bored, but the remaining 1% will weep for joy  What is WSL, and how is it useful? WSL is the Windows Subsystem for Linux, and I use it to:</description>
     </item>
     
     <item>
@@ -36,16 +46,6 @@ Sounds apocalyptic, right? Yes, it is.</description>
  get a load off my chest write some spicy 🌶🌶🌶 hot takes have some fun make some jokes sometimes make a serious point but also bury that serious point in a nuclear-grade take 💣  You&amp;rsquo;re here to be:
  entertained enraged entertainraged and to achieve edutainment  I don&amp;rsquo;t take myself, my hot takes, or this blog too seriously. Enjoy!
 Spicy Peppers Rating System #spicy-peppers-rating-system-table {font-size: 0.</description>
-    </item>
-    
-    <item>
-      <title>Expert WSL: soup-to-nuts</title>
-      <link>https://devsecfailureops.com/hot-takes/posts/expert-wsl/</link>
-      <pubDate>Mon, 01 Feb 2021 00:00:00 +0000</pubDate>
-      
-      <guid>https://devsecfailureops.com/hot-takes/posts/expert-wsl/</guid>
-      <description>Spicy Peppers Rating System | 🚫 | Zero Peppers: Mild and Nutritious; Blandly Educational Covered here:
- what WSL is, and how to install it astonishingly useful WSL tips ugly network troubleshooting boring, specialized topics that target 1% of you. 99% of you will be totally bored, but the remaining 1% will weep for joy  What is WSL, and how is it useful? WSL is the Windows Subsystem for Linux, and I use it to:</description>
     </item>
     
   </channel>

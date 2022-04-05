@@ -13,14 +13,14 @@
     
     <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Terraform Data Blocks: Ushering in the coming apocalypse"/>
-<meta name="twitter:description" content="Spicy Peppers Rating System | 🌶 | One Pepper: Bold and Zesty; Potentially Misinformation Summary: Terraform for Dummies You (yes, you) are the dummy if you&rsquo;re using Terraform&rsquo;s data blocks. Every resource that relies on a data block is in danger of being replaced because the data block is read during apply, and any resource dependent on that data block will be replaced (forces replacement).
-Sounds apocalyptic, right? Yes, it is."/>
+<meta name="twitter:description" content="Spicy Peppers Rating System | 🌶 | One Pepper: Bold and Zesty; Potentially Misinformation Summary: Data Blocks for Dummies You (yes, you) are the dummy if you&rsquo;re using Terraform&rsquo;s data blocks. Every resource that relies on a data block is in danger of being replaced, because data blocks are evaluated after apply. It&rsquo;s just a matter of time.
+Sounds apocalyptic, right? Yes, it is. And sure, my infrastructure is resilient! But let&rsquo;s not delete the entire Kubernetes cluster, okay?"/>
 
     <meta property="og:title" content="Terraform Data Blocks: Ushering in the coming apocalypse" />
-<meta property="og:description" content="Spicy Peppers Rating System | 🌶 | One Pepper: Bold and Zesty; Potentially Misinformation Summary: Terraform for Dummies You (yes, you) are the dummy if you&rsquo;re using Terraform&rsquo;s data blocks. Every resource that relies on a data block is in danger of being replaced because the data block is read during apply, and any resource dependent on that data block will be replaced (forces replacement).
-Sounds apocalyptic, right? Yes, it is." />
+<meta property="og:description" content="Spicy Peppers Rating System | 🌶 | One Pepper: Bold and Zesty; Potentially Misinformation Summary: Data Blocks for Dummies You (yes, you) are the dummy if you&rsquo;re using Terraform&rsquo;s data blocks. Every resource that relies on a data block is in danger of being replaced, because data blocks are evaluated after apply. It&rsquo;s just a matter of time.
+Sounds apocalyptic, right? Yes, it is. And sure, my infrastructure is resilient! But let&rsquo;s not delete the entire Kubernetes cluster, okay?" />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="https://devsecfailureops.com/hot-takes/posts/terraform-data-blocks-for-dummies/" /><meta property="article:section" content="posts" />
+<meta property="og:url" content="https://devsecfailureops.com/hot-takes/posts/terraform-data-block-apocalypse/" /><meta property="article:section" content="posts" />
 <meta property="article:published_time" content="2022-04-05T00:00:00+00:00" />
 <meta property="article:modified_time" content="2022-04-05T00:00:00+00:00" />
 
@@ -88,16 +88,16 @@ Sounds apocalyptic, right? Yes, it is." />
     </header>
     <div class="post-content">
       <h5 id="spicy-peppers-rating-system----one-pepper-bold-and-zesty-potentially-misinformation">Spicy Peppers Rating System | 🌶 | One Pepper: Bold and Zesty; Potentially Misinformation</h5>
-<h3 id="summary-terraform-for-dummies">Summary: Terraform for Dummies</h3>
-<p>You (yes, <strong>you</strong>) are the dummy if you&rsquo;re using Terraform&rsquo;s <code>data</code> blocks. Every resource that relies on a data block is in danger of being <code>replaced</code> because the data block is <code>read during apply</code>, and any resource dependent on that data block will be replaced (<code>forces replacement</code>).</p>
-<p>Sounds apocalyptic, right? Yes, it is. Sure, my infrastructure is resilient! But let&rsquo;s not delete <strong>the entire Kubernetes cluster</strong>, okay?</p>
+<h3 id="summary-data-blocks-for-dummies">Summary: Data Blocks for Dummies</h3>
+<p>You (yes, <strong>you</strong>) are the dummy if you&rsquo;re using Terraform&rsquo;s <code>data</code> blocks. Every resource that relies on a data block is in danger of being replaced, because data blocks are evaluated after apply. It&rsquo;s just a matter of time.</p>
+<p>Sounds apocalyptic, right? Yes, it is. And sure, my infrastructure is resilient! But let&rsquo;s not delete <strong>the entire Kubernetes cluster</strong>, okay?</p>
 <p>I know the summary above didn&rsquo;t make sense, so read on.</p>
 <h3 id="data-blocks-explained">Data blocks explained</h3>
-<p>Data blocks, or <a href="https://www.terraform.io/language/data-sources">Data sources</a> in Hashicorp&rsquo;s parlance, are conveniences that allow you to get at information. I&rsquo;ll refer to them as data blocks because in the code they are a <code>data {}</code> block. For a better explanation, read the <a href="https://www.terraform.io/language/data-sources">Hashicorp docs</a>&ndash;they&rsquo;re pretty good.</p>
+<p>Data blocks, or <a href="https://www.terraform.io/language/data-sources">Data sources</a> in Hashicorp&rsquo;s parlance, are conveniences that allow you to get at information. I&rsquo;ll refer to them as data blocks because in the code they are a <code>data {}</code> block. Hashicorp docs provide a <a href="https://www.terraform.io/language/data-sources">a good overview</a>.</p>
 <p>As I&rsquo;ve discovered, data blocks are convenient right up until Terraform wants to replace <strong>the entire Kubernetes cluster</strong>. Did I mention it was <strong>the entire Kubernetes cluster</strong>? Not a node pool, no, <strong>the entire Kubernetes cluster</strong>.</p>
 <h3 id="the-danger-by-example">The danger, by example</h3>
 <p><a href="https://github.com/hashicorp/terraform/issues/28377">This remarkably friendly GitHub issue</a> details the danger better than I can. But I&rsquo;ll try anyway.</p>
-<p>So let&rsquo;s start with something fun and simple. Let&rsquo;s start in the happy land of Not Relying On Data Blocks.</p>
+<p>Let&rsquo;s start with something fun and simple. Let&rsquo;s start in the happy land of Not Relying On Data Blocks.</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-hcl" data-lang="hcl"><span style="color:#75715e">##
 </span><span style="color:#75715e">## Innocent and Pure: Not Relying On Data Blocks
 </span><span style="color:#75715e">##
@@ -112,7 +112,7 @@ Sounds apocalyptic, right? Yes, it is." />
 </span><span style="color:#75715e">  # ... (details omitted)
 </span><span style="color:#75715e"></span>}
 </code></pre></div><p>This works great for a single resource! Great work&ndash;you&rsquo;re the best!</p>
-<p>So here&rsquo;s what we did next, when we realized we needed to reference the resource group name and location a bunch of times. So convenient! Let&rsquo;s call this scenario Impending Doom.</p>
+<p>So here&rsquo;s what we did next, when we realized we needed to reference the resource group name and location a bunch of times. So convenient! Let&rsquo;s call this scenario Impending Doom. This example is flawed, but <strong>assume</strong> the data block is needed. You can think up a real example. Like all those places you do it in your own terraform!</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-hcl" data-lang="hcl"><span style="color:#75715e">##
 </span><span style="color:#75715e">## Impending doom
 </span><span style="color:#75715e">##
@@ -130,7 +130,7 @@ Sounds apocalyptic, right? Yes, it is." />
 </span><span style="color:#75715e">
 </span><span style="color:#75715e">  # ... (details omitted)
 </span><span style="color:#75715e"></span>}
-</code></pre></div><p>There&rsquo;s a few things wrong here. First: why did we make a data block in the first place? Why didn&rsquo;t we just reference <code>var.resource_group_name</code> and <code>var.resource_group_location</code> directly? Look, this is an example. Play along (<strong>or else</strong>). Assume we need to extract &hellip; data &hellip; from the data block. I don&rsquo;t know, use your imagination.</p>
+</code></pre></div><p>There&rsquo;s a few things wrong here. First: why did we make a data block in the first place? Why didn&rsquo;t we just reference <code>var.resource_group_name</code> and <code>var.resource_group_location</code> directly? Look, this is an example. Play along. I don&rsquo;t know, use your imagination.</p>
 <p>Second: while this works perfectly on the initial <code>terraform apply</code>, danger looms! Danger ahead!</p>
 <p>Here&rsquo;s what <code>terraform plan</code> looks like some time in the future:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-hcl" data-lang="hcl"><span style="color:#75715e">##
@@ -150,7 +150,7 @@ Sounds apocalyptic, right? Yes, it is." />
 <li>On first apply, when standing up the infrastructure from scratch, there are no problems.</li>
 <li>On further applies, assuming nothing else has changed with the resource in question, there are no problems.</li>
 <li>But on Doomsday, something in your infrastructure changes. (Honestly, details TBD&ndash;I&rsquo;m still not sure what triggers this.)</li>
-<li>On Doomsday, terraform attempts to plan the difference between your HCL and reality. And when it evaluates the <code>location</code> property, it cannot evaluate the results of the <code>data</code> block, because <strong>data blocks are evaluated during apply</strong>. Let that sink in. Data blocks are not evaluated during plan, but during apply. Not during plan. Not during plan. Am I crazy? Not during plan.</li>
+<li>On Doomsday, terraform attempts to plan the difference between your HCL and reality. And when it evaluates the <code>location</code> property, it cannot evaluate the results of the <code>data</code> block, because <strong>data blocks are evaluated during apply</strong>. Let that sink in. Data blocks are not evaluated during plan, but during apply. Not during plan. Not during plan. Am I crazy? Not during plan, but during apply.</li>
 <li>Because it does not know the value of the (honestly truly important) <code>location</code> property, it doesn&rsquo;t know if the location&rsquo;s going to change, and makes a plan assuming it will change. So, to use Terraform&rsquo;s terminology, because it relies on a property <code>known after apply</code>, this <code>forces replacement</code>.</li>
 <li>So as a result of you using a data block, which you did for just a little extra convenience, terraform wants to replace <strong>the entire Kubernetes cluster</strong>.</li>
 <li>Though I haven&rsquo;t tested it, according to the GitHub Issue at <a href="https://github.com/hashicorp/terraform/issues/28377">https://github.com/hashicorp/terraform/issues/28377</a> - terraform is <strong>not</strong> bluffing and will indeed replace all your stuff.</li>
@@ -174,7 +174,7 @@ Sounds apocalyptic, right? Yes, it is." />
 <h4 id="political-advocacy-and-a-cry-for-help">Political Advocacy and a cry for help</h4>
 <p>I have several things to say:</p>
 <ol>
-<li>Political advocacy: I blame HashiCorp for casually tossing data blocks around in the documentation. Put a stern warning in there, Hashicorp. These things are <strong>productivity landmines</strong>.</li>
+<li>Political advocacy: I blame HashiCorp for casually tossing data blocks around in the documentation. Put a stern warning in there, Hashicorp. These things are <em>productivity landmines</em>.</li>
 <li>Hashicorp: seriously, this is a nightmare. <code>terraform validate</code> should warn me for every single data block I use. Sure, some data blocks can be used safely, as can some sticks of dynamite. But let&rsquo;s put some guardrails on these things, okay?</li>
 <li>AM I CRAZY!!?!?!????! HAVE I GONE INSANE!?!???!? AM I ALONE IN THIS STRUGGLE!?!????? I wrote this post as a way of trying to figure out if I&rsquo;m doing something horribly wrong. Am I? Is there an easier way to resolve this problem? Am I making faulty assumptions? Let me know. I am very experienced in the art of making bad assumptions and as a result, wasting hours of my own time.</li>
 </ol>

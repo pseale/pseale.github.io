@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Posts on Thought Leadership from Peter</title>
-    <link>https://www.devsecfailureops.com/hot-takes/posts/</link>
-    <description>Recent content in Posts on Thought Leadership from Peter</description>
+    <title>Posts on DevSecFailureOps</title>
+    <link>https://devsecfailureops.com/hot-takes/posts/</link>
+    <description>Recent content in Posts on DevSecFailureOps</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 18 Mar 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://www.devsecfailureops.com/hot-takes/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 18 Mar 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://devsecfailureops.com/hot-takes/posts/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Command Palettes (Omnisearch) Everywhere</title>
-      <link>https://www.devsecfailureops.com/hot-takes/posts/command-palette-everywhere/</link>
+      <link>https://devsecfailureops.com/hot-takes/posts/command-palette-everywhere/</link>
       <pubDate>Fri, 18 Mar 2022 00:00:00 +0000</pubDate>
       
-      <guid>https://www.devsecfailureops.com/hot-takes/posts/command-palette-everywhere/</guid>
+      <guid>https://devsecfailureops.com/hot-takes/posts/command-palette-everywhere/</guid>
       <description>Spicy Peppers Rating System | 🚫 | Zero Peppers: Inoffensive and Sincere Summary  Command Palettes let you search for and run commands by descriptive name. Thus for rare or obscure tasks, using the Command Palette is much easier than hunting down commands in Nested-&amp;gt;Edit-&amp;gt;Menus or memorizing arcane key chords. This is a big productivity boost, and I&amp;rsquo;m the only person I know who does this. You people are doing it all wrong!</description>
     </item>
     
     <item>
       <title>Standard Disclaimer</title>
-      <link>https://www.devsecfailureops.com/hot-takes/posts/standard-disclaimer/</link>
+      <link>https://devsecfailureops.com/hot-takes/posts/standard-disclaimer/</link>
       <pubDate>Sat, 01 Jan 2022 00:00:00 +0000</pubDate>
       
-      <guid>https://www.devsecfailureops.com/hot-takes/posts/standard-disclaimer/</guid>
+      <guid>https://devsecfailureops.com/hot-takes/posts/standard-disclaimer/</guid>
       <description>Welcome! I&amp;rsquo;m Peter, and I&amp;rsquo;m here to:
  get a load off my chest write some spicy 🌶🌶🌶 hot takes have some fun make some jokes sometimes make a serious point but also bury that serious point in a nuclear-grade take 💣  You&amp;rsquo;re here to be:
  entertained enraged entertainraged and to achieve edutainment  I don&amp;rsquo;t take myself, my hot takes, or this blog too seriously. Enjoy!
@@ -30,10 +30,10 @@ Spicy Peppers Rating System #spicy-peppers-rating-system-table {font-size: 0.<
     
     <item>
       <title>Expert WSL: soup-to-nuts</title>
-      <link>https://www.devsecfailureops.com/hot-takes/posts/expert-wsl/</link>
+      <link>https://devsecfailureops.com/hot-takes/posts/expert-wsl/</link>
       <pubDate>Mon, 01 Feb 2021 00:00:00 +0000</pubDate>
       
-      <guid>https://www.devsecfailureops.com/hot-takes/posts/expert-wsl/</guid>
+      <guid>https://devsecfailureops.com/hot-takes/posts/expert-wsl/</guid>
       <description>Spicy Peppers Rating System | 🚫 | Zero Peppers: Mild and Nutritious; Blandly Educational Covered here:
  what WSL is, and how to install it astonishingly useful WSL tips ugly network troubleshooting boring, specialized topics that target 1% of you. 99% of you will be totally bored, but the remaining 1% will weep for joy  What is WSL, and how is it useful? WSL is the Windows Subsystem for Linux, and I use it to:</description>
     </item>

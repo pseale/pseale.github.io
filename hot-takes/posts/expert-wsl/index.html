@@ -1,8 +1,8 @@
 <!doctype html>
 <html lang="en-us">
   <head>
-    <title>Expert WSL: soup-to-nuts // DevSecFailureOps</title>
-    <link rel="shortcut icon" href="/favicon.ico" />
+    <title>Expert WSL: soup-to-nuts - DevSecFailureOps</title>
+    
     <meta charset="utf-8" />
     <meta name="generator" content="Hugo 0.92.1" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -14,11 +14,11 @@
     <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Expert WSL: soup-to-nuts"/>
 <meta name="twitter:description" content="Spicy Peppers Rating System | 🚫 | Zero Peppers: Mild and Nutritious; Blandly Educational Covered here:
- what WSL is, and how to install it astonishingly useful WSL tips ugly network troubleshooting boring, specialized topics that target 1% of you. 99% of you will be totally bored, but the remaining 1% will weep for joy  What is WSL, and how is it useful? WSL is the Windows Subsystem for Linux, and I use it to:"/>
+ what WSL is, and how to install it astonishingly useful WSL tips! ugly network troubleshooting boring, specialized topics that target 1% of you. 99% of you will be totally bored, but the remaining 1% will weep for joy  Introduction: What is WSL, and how is it useful? WSL is the Windows Subsystem for Linux, and I use it to:"/>
 
     <meta property="og:title" content="Expert WSL: soup-to-nuts" />
 <meta property="og:description" content="Spicy Peppers Rating System | 🚫 | Zero Peppers: Mild and Nutritious; Blandly Educational Covered here:
- what WSL is, and how to install it astonishingly useful WSL tips ugly network troubleshooting boring, specialized topics that target 1% of you. 99% of you will be totally bored, but the remaining 1% will weep for joy  What is WSL, and how is it useful? WSL is the Windows Subsystem for Linux, and I use it to:" />
+ what WSL is, and how to install it astonishingly useful WSL tips! ugly network troubleshooting boring, specialized topics that target 1% of you. 99% of you will be totally bored, but the remaining 1% will weep for joy  Introduction: What is WSL, and how is it useful? WSL is the Windows Subsystem for Linux, and I use it to:" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://devsecfailureops.com/hot-takes/posts/expert-wsl/" /><meta property="article:section" content="posts" />
 <meta property="article:published_time" content="2022-04-01T00:00:00+00:00" />
@@ -29,8 +29,32 @@
     <style>
        
 
+      header.app-header {
+        padding: 3em;
+        margin: -1.5em;
+        yes-this-was-on-purpose: 1;  
+      }
+
+       
+      @media (max-width:940px)  {
+        main.app-container {
+          padding: 2px;
+          margin: 2px;
+        }
+        header.app-header {
+          padding: 0;
+          margin: 0;
+          yes-this-was-on-purpose: 1;  
+        }
+      }
+
       body {
         font-size: 16px;
+        color: #d6e3ef;
+      }
+
+      body strong {
+        color: #fff;
       }
 
       h2 {
@@ -49,6 +73,15 @@
         margin: 5px 0;
         padding-left: 5px;
         background: #57cc8a;
+      }
+      code {
+        color: rgb(206 217 227);  
+        background-color: #4b525c;  
+        padding: 2px;
+      }
+      div.highlight code {
+        background-color: inherit;  
+        padding: 0;
       }
     </style>
   </head>
@@ -98,11 +131,11 @@
 <p>Covered here:</p>
 <ul>
 <li>what WSL is, and how to install it</li>
-<li>astonishingly useful WSL tips</li>
+<li><strong>astonishingly useful WSL tips!</strong></li>
 <li>ugly network troubleshooting</li>
 <li>boring, specialized topics that target 1% of you. 99% of you will be totally bored, but the remaining 1% will weep for joy</li>
 </ul>
-<h3 id="what-is-wsl-and-how-is-it-useful">What is WSL, and how is it useful?</h3>
+<h3 id="introduction-what-is-wsl-and-how-is-it-useful">Introduction: What is WSL, and how is it useful?</h3>
 <p>WSL is the Windows Subsystem for Linux, and I use it to:</p>
 <ul>
 <li>ssh</li>
@@ -112,61 +145,70 @@
 <li>run Windows-incompatible tools - most notably, TUIs like <code>tig</code> don&rsquo;t run in Windows</li>
 <li>configure neovim plugins for 7-20 hours every week (this is a joke, don&rsquo;t hurt me)</li>
 </ul>
-<p>WSL2 is also well-isolated, such that I have already installed, deleted, reinstalled, and re-reinstalled distros without issue. In other words, it doesn&rsquo;t do spooky things to your host like 👻👻👻cygwin👻👻👻 did all those years ago. Spoken in love, cygwin.</p>
-<h3 id="installing-wsl2-itself">Installing: WSL2 itself</h3>
-<p>Installing is as simple as running (as Administrator) <code>wsl --install</code> if you&rsquo;re lucky; read this if you&rsquo;re not lucky: <a href="https://docs.microsoft.com/en-us/windows/wsl/install#install">https://docs.microsoft.com/en-us/windows/wsl/install#install</a></p>
+<p>All of these things can be done without WSL, but it&rsquo;s <strong>less effort</strong> to go with the flow and say, run ssh as nature intended. As a good, real example, every complex <code>kubectl</code> script I&rsquo;ve seen was written in bash. You can convert those scripts to PowerShell, or you can somehow run bash directly on Windows&hellip;but why? <strong>It&rsquo;s easier in WSL</strong>.</p>
+<p>WSL is also well-isolated, such that I have already installed, deleted, reinstalled, and re-reinstalled distros without issue. In other words, WSL doesn&rsquo;t do spooky things to your host like 👻👻👻cygwin👻👻👻 does. Spoken in love, cygwin.</p>
+<h3 id="installing-wsl-itself">Installing: WSL itself</h3>
+<p>As of 2022, installing WSL2 is as simple as running (as Administrator) <code>wsl --install</code> if you&rsquo;re lucky. Read this if you&rsquo;re not lucky: <a href="https://docs.microsoft.com/en-us/windows/wsl/install#install">https://docs.microsoft.com/en-us/windows/wsl/install#install</a></p>
 <p>You will need to Enable Virtualization in your BIOS if it isn&rsquo;t already enabled. Good luck. Everyone&rsquo;s BIOS is different. These instructions are pretty good? <a href="https://bce.berkeley.edu/enabling-virtualization-in-your-pc-bios.html">https://bce.berkeley.edu/enabling-virtualization-in-your-pc-bios.html</a> - anyway my expert technique to access the BIOS menu is to reboot and use both hands to repeatedly tap <code>Del</code>, <code>F1</code>, <code>F2</code>, <code>F8</code>, <code>F9</code>, <code>F12</code> all together, as quickly as possible, while thinking happy thoughts.</p>
+<p>Beware of older, outdated instructions for installing WSL1 and even WSL2. And in full disclosure, I&rsquo;m writing this sentence in April 2022, and I&rsquo;m sure my instructions will similarly fall out of date. In the future you&rsquo;ll spend 45 minutes begging your Windows Store Personal GAN Shopping Assistant to install WSL, and it won&rsquo;t, of course. Anyway good luck in the future.</p>
 <h3 id="installing-a-linux-distro">Installing: a linux distro</h3>
 <p>Installing a specific distro happens through the Windows Store. I don&rsquo;t know why, either. Maybe forcing die-hard CLI advocates to install their favorite GPL-licensed distro through the comically commercialized Windows Store is a kind of joke? Well, intentional or no, it&rsquo;s hilarious.</p>
 <p>If you don&rsquo;t know which distro to install, <strong>pick the most recent version of Ubuntu.</strong> And if you think you want to argue with this deliberately simplistic advice, then you are <strong>definitely</strong> not the target audience for it. Go in peace.</p>
 <h3 id="surprisingly-useful-things">Surprisingly useful things</h3>
-<p>WSL can launch Windows programs and use them in pipelines. There are some great things you can do with this <em>synergy</em>.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e"># launch Windows Explorer here</span>
+<p>WSL can launch Windows programs and use them in pipelines. There are some great things you can do with this <em>synergy</em>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e"># launch Windows Explorer here - three ways</span>
 cmd.exe /c start .
+explorer.exe
+powershell.exe -Command ii .
 
 <span style="color:#75715e"># works on links too</span>
-cmd.exe /c start https://google.com/search?q<span style="color:#f92672">=</span>wsl+by+example+cheatsheet
+cmd.exe /c start https://google.com/search?q<span style="color:#f92672">=</span>expert+wsl+devsecfailureops
 
 <span style="color:#75715e"># pipe directly to the Windows clipboard</span>
-echo <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">${</span>WSL_DISTRO_NAME<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span> | clip.exe
-</code></pre></div><p>You can also pipe Windows stdout to WSL stdin, but I haven&rsquo;t found many good uses for it. I guess I could do something like the following? Anyway, it&rsquo;s possible.</p>
+echo <span style="color:#e6db74">&#34;hunter2&#34;</span> | base64 | clip.exe
+</code></pre></div><p>You can also run WSL processes in your PowerShell pipeline, but I haven&rsquo;t found many good uses for it. I guess I could do something like the following? Anyway, it&rsquo;s possible.</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-powershell" data-lang="powershell"><span style="color:#75715e"># base64-encode whatever&#39;s on the clipboard, and put that back on the clipboard</span>
 Get-Clipboard | wsl base64 | Set-Clipboard
 </code></pre></div><h3 id="accessing-files">Accessing files</h3>
 <p>Windows can access the WSL distro&rsquo;s filesystem, and the WSL distro can access Windows' filesystem.</p>
 <p><strong>From Windows:</strong></p>
 <ul>
-<li><code>\\wsl$\Ubuntu-20.04\home\p\.bashrc</code> - The full path is formed as such: <code>\\wsl$\Ubuntu-20.04</code> is the root of the Ubuntu 20.04 filesystem, and <code>/home/p/.bashrc</code> is the path within that filesystem</li>
-<li>Typing <code>\\wsl$</code> into the Explorer address bar shows all distros and lets you lazily navigate with the mouse and other GUI affordances (BUT I WOULD NEVER!)</li>
+<li>Files in WSL are accessible. By example, the full path for <code>\\wsl$\Ubuntu-20.04\home\p\.bashrc</code> is formed as such:
+<ul>
+<li><code>\\wsl$\Ubuntu-20.04</code> accesses the root of the Ubuntu 20.04 filesystem</li>
+<li><code>/home/p/.bashrc</code> is the path within that filesystem</li>
+<li>thus <code>\\wsl$\Ubuntu-20.04</code> + <code>/home/p/.bashrc</code> -&gt; <code>\\wsl$\Ubuntu-20.04\home\p\.bashrc</code></li>
+</ul>
+</li>
 <li><code>cd \\wsl$\Ubuntu-20.04</code> works in PowerShell, and even cmd.exe has limited support for UNC-style paths</li>
+<li>Accessing <code>\\wsl$</code> from the Explorer address bar lets you lazily navigate around WSL with the mouse and other GUI affordances&ndash;*audible gasp* BUT I WOULD NEVER! I haven&rsquo;t touched my mouse since 2018, I swear! And that was an accident!</li>
 </ul>
 <p><strong>From WSL:</strong></p>
 <ul>
-<li>Windows drives are mounted to <code>/mnt/&lt;driveletter&gt;</code>.</li>
-<li><code>mount</code> shows WSL&rsquo;s special mounts:
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ mount
-C:<span style="color:#ae81ff">\ </span>on /mnt/c type drvfs <span style="color:#f92672">(</span>rw,noatime,uid<span style="color:#f92672">=</span>1000,gid<span style="color:#f92672">=</span>1000,case<span style="color:#f92672">=</span>off<span style="color:#f92672">)</span>
-D:<span style="color:#ae81ff">\ </span>on /mnt/d type drvfs <span style="color:#f92672">(</span>rw,noatime,uid<span style="color:#f92672">=</span>1000,gid<span style="color:#f92672">=</span>1000,case<span style="color:#f92672">=</span>off<span style="color:#f92672">)</span>
-<span style="color:#75715e"># ... boring parts redacted ...</span>
-</code></pre></div></li>
-<li>To reference Windows files and paths, do something like e.g. <code>ls -al /mnt/c/Users/p/Desktop</code>. The full path is formed as such: <code>/mnt/c</code> gets you to the C:, and <code>\Users\p\Desktop</code> is the path within the C: drive.</li>
-<li>Windows paths referenced from WSL are case-sensitive.</li>
+<li>Files in Windows are accessible. By example, the full path for <code>/mnt/c/Users/p/Desktop/passwords.txt</code> is formed as such:
+<ul>
+<li><code>/mnt/c</code> accesses the root of the C: (all Windows drives are mounted to <code>/mnt/&lt;driveletter&gt;</code>)</li>
+<li><code>\Users\p\Desktop\passwords.txt</code> is the path from within C:</li>
+<li>thus <code>/mnt/c</code> + <code>\Users\p\Desktop\passwords.txt</code> -&gt; <code>/mnt/c/Users/p/Desktop/passwords.txt</code></li>
+</ul>
+</li>
+<li>Windows paths referenced from WSL are <strong>case-sensitive</strong>. This is easier to remember once you&rsquo;ve been burned by it 3-4 times (or 300-400 maybe).</li>
 </ul>
 <h3 id="wslexe-usage">wsl.exe usage</h3>
-<p><code>wsl.exe</code> is of specific, limited utility. Here are the specific things I&rsquo;ve done with <code>wsl.exe</code>:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-powershell" data-lang="powershell"><span style="color:#75715e"># start default distro and launch shell - also kicks the WSL subsystem into gear if WSL&#39;s not running, for whatever reason</span>
+<p>Here are the specific things I&rsquo;ve done with <code>wsl.exe</code>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-powershell" data-lang="powershell"><span style="color:#75715e"># start default distro and launch shell</span>
+<span style="color:#75715e"># also kicks the WSL subsystem into gear if WSL&#39;s not running, for whatever reason</span>
 wsl
 
-<span style="color:#75715e"># list - useful if you installed both &#39;ubuntu&#39; and &#39;ubuntu-20.04&#39; - whoops</span>
-<span style="color:#75715e"># anyway, I should also point out that you can simultaneously install multiple distros</span>
+<span style="color:#75715e"># list - useful if you&#39;re playing around with multiple distros, or don&#39;t know what you&#39;re doing</span>
+<span style="color:#75715e"># I should point out that you can simultaneously install multiple distros</span>
 wsl --list
 
 <span style="color:#75715e"># shutdown</span>
 wsl --shutdown
-
-<span style="color:#75715e"># both   --exec   and   (any unrecognized parameter)   run a command in the WSL guest OS</span>
-<span style="color:#75715e"># and as is becoming a convention in CLIs everywhere, everything after   --   is delegated to the WSL distro</span>
-<span style="color:#75715e">#   - you know, like git does. See https://stackoverflow.com/a/13321491 for a good explanation of -- in git</span>
+</code></pre></div><p>You can quickly invoke the WSL shell via wsl.exe. The details are explained by example below:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-powershell" data-lang="powershell"><span style="color:#75715e"># both   --exec   and   (any unrecognized parameter)   run a command in the WSL distro</span>
+<span style="color:#75715e"># everything after   --   is delegated to the WSL distro</span>
 wsl --exec echo <span style="color:#e6db74">&#34;I&#39;m in unix! PowerShell version: </span>$($PSVersionTable.PSVersion)<span style="color:#e6db74"> &lt;--evaluated in PowerShell in Windows&#34;</span>
 wsl ls -al
 wsl -- ls -al
@@ -181,7 +223,8 @@ wsl -- echo <span style="color:#e6db74">&#34;WSL distro: </span><span style="col
 <span style="color:#75715e"># this echoes back      WSL Distro: ${WSL_DISTRO_NAME}</span>
 wsl --exec echo <span style="color:#e6db74">&#34;WSL Distro: </span><span style="color:#ae81ff">`$</span><span style="color:#e6db74">{WSL_DISTRO_NAME}&#34;</span>
 </code></pre></div><h3 id="seamless-text-editing-vs-code">Seamless Text Editing: VS Code</h3>
-<p>VS Code (running in Windows) seamlessly edits files in WSL2. To quickly launch the current directory in WSL, do:</p>
+<p>VS Code (running in Windows) seamlessly edits files in WSL2, so long as you&rsquo;ve installed either of the <code>Remote - WSL</code> or <code>Remote Development</code> extensions.</p>
+<p>To painlessly launch the current directory in WSL, do:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ code .
 </code></pre></div><h3 id="seamless-terminal-experience-windows-terminal">Seamless Terminal Experience: Windows Terminal</h3>
 <p>I launch the Ubuntu 20.04 shell in a new tab in Windows Terminal with <code>CTRL</code> + <code>SHIFT</code> + <code>2</code>. Windows Terminal is highly configurable, so your hotkeys may vary.</p>
@@ -194,7 +237,7 @@ wsl --exec echo <span style="color:#e6db74">&#34;WSL Distro: </span><span style=
 </ul>
 <h3 id="wsl-uses-ram">WSL uses RAM</h3>
 <ul>
-<li>If you&rsquo;re running WSL on a Windows OS with only 16GB of RAM, consider upgrading to 32GB. With 16GB, you&rsquo;re likely using all your RAM and relying on swap. This will slow you down noticeably.</li>
+<li>If you&rsquo;re running WSL on a Windows OS with only 16GB of RAM, consider upgrading to 32GB. With 16GB, you&rsquo;re likely using all your RAM and relying on swap. This will slow you down noticeably. I mean, yes, we mostly blame Chrome and curse the day Electron was invented, and they&rsquo;re the worst offenders. I&rsquo;m just saying that once you start running containers or VMs on 16GB of RAM, you&rsquo;re done. You&rsquo;re done.</li>
 <li>WSL2 appears as <code>Vmmem</code> in Task Manager. Ubuntu 20.04 on my machine is currently using just under 2GB of RAM.</li>
 <li>To check available RAM, look at Performance-&gt;Memory in Task Manager.</li>
 </ul>
@@ -202,9 +245,8 @@ wsl --exec echo <span style="color:#e6db74">&#34;WSL Distro: </span><span style=
 <p>Listen up! Networking in WSL is magic. And by magic I mean opaque, mysterious, fickle, and moody. I&rsquo;ve done several things to fix networking issues:</p>
 <ul>
 <li>If DNS dies regularly in WSL, fix it permanently with this WSL-specific change: <a href="https://superuser.com/a/1533768">https://superuser.com/a/1533768</a></li>
-<li>Set MTU to 1400 - I would love to explain this further, but in short, I can&rsquo;t. Good luck, and if you google your mysterious networking-related error message and some of the first results are for setting the &lsquo;MTU&rsquo;, then try it, certainly.</li>
+<li>Set MTU to 1400 - I would love to explain this further, but in short, I can&rsquo;t. Good luck, and if you google your mysterious networking-related error message and some of the first results are for setting the &lsquo;MTU&rsquo;, then try it, certainly. The last time I saw this error, someone was trying to clone a git repo.</li>
 </ul>
-<p>My VPN provider seems to interfere with WSL networking, but I&rsquo;m not certain of anything, and it&rsquo;s just a hypothesis at this point.</p>
 <h3 id="boring-and-necessary-line-endings">Boring and Necessary: Line endings</h3>
 <p>This is a really boring topic, but if you need it, you need it.</p>
 <p>Git for Windows is probably checking out files with CRLF line endings (the specifics are here: <a href="https://docs.github.com/en/get-started/getting-started-with-git/configuring-git-to-handle-line-endings)">https://docs.github.com/en/get-started/getting-started-with-git/configuring-git-to-handle-line-endings)</a>. For most of us, if you commit files in Windows, push to GitHub, and pull them down in WSL, the line endings are LF in WSL and CRLF in Windows, which is probably what you want. However, if you&rsquo;re manipulating/accessing files across Linux and Windows boundaries, consider several solutions to tackling the line ending problem:</p>
@@ -217,7 +259,7 @@ wsl --exec echo <span style="color:#e6db74">&#34;WSL Distro: </span><span style=
 <li>set <code>.gitattributes</code> in individual repos to always checkout some file types (e.g. shell scripts) as LF</li>
 <li>set <code>.gitattributes</code> in specific repos to always checkout all files as LF</li>
 </ul>
-<p>More permanent defaults for your git install only:</p>
+<p>More permanent defaults for your git install (only affects you, not the team):</p>
 <ul>
 <li>via <code>git config --global core.autocrlf</code></li>
 <li>via <code>git config --global core.eol</code></li>

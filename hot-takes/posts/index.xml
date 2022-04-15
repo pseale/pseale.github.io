@@ -6,15 +6,14 @@
     <description>Recent content in Posts on DevSecFailureOps</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 05 Apr 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://devsecfailureops.com/hot-takes/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 14 Apr 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://devsecfailureops.com/hot-takes/posts/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Terraform Data Blocks: Ushering in the coming apocalypse</title>
       <link>https://devsecfailureops.com/hot-takes/posts/terraform-data-block-apocalypse/</link>
-      <pubDate>Tue, 05 Apr 2022 00:00:00 +0000</pubDate>
+      <pubDate>Thu, 14 Apr 2022 00:00:00 +0000</pubDate>
       
       <guid>https://devsecfailureops.com/hot-takes/posts/terraform-data-block-apocalypse/</guid>
-      <description>Spicy Peppers Rating System | 🌶 | One Pepper: Bold and Zesty; Potentially Misinformation Summary: Data Blocks for Dummies Data blocks for dummies may be explained as follows: you are the dummy if you&amp;rsquo;re using Terraform&amp;rsquo;s data blocks. Every resource that relies on a data block is in danger of being replaced, because data blocks are evaluated after apply. It&amp;rsquo;s just a matter of time.
-I know the summary above didn&amp;rsquo;t make sense, so read on.</description>
+      <description>Spicy Peppers Rating System | 🌶 | One Pepper: Bold and Zesty; Potentially Misinformation Summary: Data Blocks for Dummies Data blocks for dummies may be explained as follows: you are the dummy if you&amp;rsquo;re using Terraform&amp;rsquo;s data blocks (Terraform Data sources). This is because every resource that relies on a data block is in danger of being replaced, because data blocks can be evaluated after apply. It&amp;rsquo;s just a matter of time.</description>
     </item>
     
     <item>
@@ -24,7 +23,7 @@ I know the summary above didn&amp;rsquo;t make sense, so read on.</description>
       
       <guid>https://devsecfailureops.com/hot-takes/posts/expert-wsl/</guid>
       <description>Spicy Peppers Rating System | 🚫 | Zero Peppers: Mild and Nutritious; Blandly Educational Covered here:
- what WSL is, and how to install it astonishingly useful WSL tips ugly network troubleshooting boring, specialized topics that target 1% of you. 99% of you will be totally bored, but the remaining 1% will weep for joy  What is WSL, and how is it useful? WSL is the Windows Subsystem for Linux, and I use it to:</description>
+ what WSL is, and how to install it astonishingly useful WSL tips! ugly network troubleshooting boring, specialized topics that target 1% of you. 99% of you will be totally bored, but the remaining 1% will weep for joy  Introduction: What is WSL, and how is it useful? WSL is the Windows Subsystem for Linux, and I use it to:</description>
     </item>
     
     <item>
@@ -44,7 +43,7 @@ I know the summary above didn&amp;rsquo;t make sense, so read on.</description>
       <guid>https://devsecfailureops.com/hot-takes/posts/standard-disclaimer/</guid>
       <description>Welcome! I&amp;rsquo;m Peter, and I&amp;rsquo;m here to:
  get a load off my chest write some spicy 🌶🌶🌶 hot takes have some fun make some jokes sometimes make a serious point but also bury that serious point in a nuclear-grade take 💣  You&amp;rsquo;re here to:
- be entertained be enraged be entertainraged and to achieve edutainment  I don&amp;rsquo;t take myself, my hot takes, or this blog too seriously. Enjoy!</description>
+ learn something be entertained be enraged sample a Neopolitan-esque combination of all three flavors. Let&amp;rsquo;s call this edu-tain-ragement. Edutainragement. Flows off the tongue.  I don&amp;rsquo;t take myself, these hot takes, or this blog too seriously.</description>
     </item>
     
   </channel>

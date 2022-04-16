@@ -8,12 +8,14 @@
     <language>en-us</language>
     <lastBuildDate>Thu, 14 Apr 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://devsecfailureops.com/hot-takes/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Terraform Data Blocks: Ushering in the coming apocalypse</title>
-      <link>https://devsecfailureops.com/hot-takes/posts/terraform-data-block-apocalypse/</link>
+      <title>Terraform Data Blocks: Lurking Danger</title>
+      <link>https://devsecfailureops.com/hot-takes/posts/terraform-data-block-danger/</link>
       <pubDate>Thu, 14 Apr 2022 00:00:00 +0000</pubDate>
       
-      <guid>https://devsecfailureops.com/hot-takes/posts/terraform-data-block-apocalypse/</guid>
-      <description>Spicy Peppers Rating System | 🌶 | One Pepper: Bold and Zesty; Potentially Misinformation Summary: Data Blocks for Dummies Data blocks for dummies may be explained as follows: you are the dummy if you&amp;rsquo;re using Terraform&amp;rsquo;s data blocks (Terraform Data sources). This is because every resource that relies on a data block is in danger of being replaced, because data blocks can be evaluated after apply. It&amp;rsquo;s just a matter of time.</description>
+      <guid>https://devsecfailureops.com/hot-takes/posts/terraform-data-block-danger/</guid>
+      <description>Spicy Peppers Rating System | 🌶 | One Pepper: Bold and Zesty; Potentially Misinformation Summary: Data Blocks Data blocks (Terraform Data sources) appear harmless, but aren&amp;rsquo;t. This is because every resource that relies on a data block is in danger of being replaced, because data blocks can be evaluated after apply. It&amp;rsquo;s just a matter of time.
+I know the summary above didn&amp;rsquo;t make sense, so read on.
+Data blocks explained Data blocks, or Data sources in Hashicorp&amp;rsquo;s parlance, are a convenient way to get at information.</description>
     </item>
     
     <item>

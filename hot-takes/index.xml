@@ -6,16 +6,14 @@
     <description>Recent content on DevSecFailureOps</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 14 Apr 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://devsecfailureops.com/hot-takes/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 24 Apr 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://devsecfailureops.com/hot-takes/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Terraform Data Blocks: Lurking Danger</title>
-      <link>https://devsecfailureops.com/hot-takes/posts/terraform-data-block-danger/</link>
-      <pubDate>Thu, 14 Apr 2022 00:00:00 +0000</pubDate>
+      <title>Terraform Data Blocks: Surgeon General&#39;s Warning</title>
+      <link>https://devsecfailureops.com/hot-takes/posts/terraform-surgeon-generals-warning/</link>
+      <pubDate>Sun, 24 Apr 2022 00:00:00 +0000</pubDate>
       
-      <guid>https://devsecfailureops.com/hot-takes/posts/terraform-data-block-danger/</guid>
-      <description>Spicy Peppers Rating System | 🌶 | One Pepper: Bold and Zesty; Potentially Misinformation Summary: Data Blocks Data blocks (Terraform Data sources) appear harmless, but aren&amp;rsquo;t. This is because every resource that relies on a data block is in danger of being replaced, because data blocks can be evaluated after apply. It&amp;rsquo;s just a matter of time.
-I know the summary above didn&amp;rsquo;t make sense, so read on.
-Data blocks explained Data blocks, or Data sources in Hashicorp&amp;rsquo;s parlance, are a convenient way to get at information.</description>
+      <guid>https://devsecfailureops.com/hot-takes/posts/terraform-surgeon-generals-warning/</guid>
+      <description>Spicy Peppers Rating System | 🌶 - One Pepper | Bold and Zesty; Potentially Misinformation SURGEON GENERAL&#39;S WARNING: Quitting DATA BLOCKS Now Greatly Reduces Serious Risks to Your TERRAFORM INFRASTRUCTURE.Summary: Data Blocks Data blocks (Terraform Data sources) appear harmless, but aren&amp;rsquo;t. This is because every resource that relies on a data block is in danger of being replaced, because data blocks can be evaluated after apply. It&amp;rsquo;s just a matter of time.</description>
     </item>
     
     <item>
@@ -24,7 +22,7 @@ Data blocks explained Data blocks, or Data sources in Hashicorp&amp;rsquo;s parl
       <pubDate>Fri, 01 Apr 2022 00:00:00 +0000</pubDate>
       
       <guid>https://devsecfailureops.com/hot-takes/posts/expert-wsl/</guid>
-      <description>Spicy Peppers Rating System | 🚫 | Zero Peppers: Mild and Nutritious; Blandly Educational Covered here:
+      <description>Spicy Peppers Rating System | 🚫 - Zero Peppers | Mild and Nutritious; Blandly Educational Covered here:
  what WSL is, and how to install it astonishingly useful WSL tips! ugly network troubleshooting boring, specialized topics that target 1% of you. 99% of you will be totally bored, but the remaining 1% will weep for joy  Introduction: What is WSL, and how is it useful? WSL is the Windows Subsystem for Linux, and I use it to:</description>
     </item>
     
@@ -34,7 +32,7 @@ Data blocks explained Data blocks, or Data sources in Hashicorp&amp;rsquo;s parl
       <pubDate>Fri, 18 Mar 2022 00:00:00 +0000</pubDate>
       
       <guid>https://devsecfailureops.com/hot-takes/posts/command-palette-everywhere/</guid>
-      <description>Spicy Peppers Rating System | 🚫 | Zero Peppers: Inoffensive and Sincere Summary  Command Palettes let you search for and run commands by descriptive name. Thus for rare or obscure tasks, using the Command Palette is much easier than hunting down commands in Nested-&amp;gt;Edit-&amp;gt;Menus or memorizing arcane key chords. This is a big productivity boost, and I&amp;rsquo;m the only person I know who does this. You people are doing it all wrong!</description>
+      <description>Spicy Peppers Rating System | 🚫 - Zero Peppers | Inoffensive and Sincere Summary  Command Palettes let you search for and run commands by descriptive name. Thus for rare or obscure tasks, using the Command Palette is much easier than hunting down commands in Nested-&amp;gt;Edit-&amp;gt;Menus or memorizing arcane key chords. This is a big productivity boost, and I&amp;rsquo;m the only person I know who does this. You people are doing it all wrong!</description>
     </item>
     
     <item>

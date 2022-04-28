@@ -13,7 +13,7 @@
       <pubDate>Sun, 24 Apr 2022 00:00:00 +0000</pubDate>
       
       <guid>https://devsecfailureops.com/hot-takes/posts/terraform-surgeon-generals-warning/</guid>
-      <description>Spicy Peppers Rating System | 🌶 - One Pepper | Bold and Zesty; Potentially Misinformation SURGEON GENERAL&#39;S WARNING: Quitting DATA BLOCKS Now Greatly Reduces Serious Risks to Your TERRAFORM INFRASTRUCTURE.Summary: Data Blocks Data blocks (Terraform Data sources) appear harmless, but aren&amp;rsquo;t. This is because every resource that relies on a data block is in danger of being replaced, because data blocks can be evaluated after apply. It&amp;rsquo;s just a matter of time.</description>
+      <description>Spicy Peppers Rating System | 🌶 - One Pepper | Bold and Zesty; Potentially Misinformation SURGEON GENERAL&#39;S WARNING: Quitting DATA BLOCKS Now Greatly Reduces Serious Risks to Your TERRAFORM INFRASTRUCTURE.Summary Data blocks (Terraform Data sources) appear harmless, but aren&amp;rsquo;t. This is because every resource that relies on a data block is in danger of being replaced, because in some circumstances, data blocks are evaluated after apply. It&amp;rsquo;s just a matter of time.</description>
     </item>
     
     <item>

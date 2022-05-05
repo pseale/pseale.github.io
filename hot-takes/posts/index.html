@@ -123,7 +123,7 @@
   <title>calendar</title>
   <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line>
 </svg>
-                  Apr 24, 2022
+                  
                 </div>
               </div>
             </header>
@@ -197,6 +197,7 @@ SURGEON GENERAL'S WARNING: Quitting <span style="color: #111; font-family: serif
 </ul>
 <p>And let me be clear that because no one on my team knew to avoid this, we built the terraform in such a way that <strong>the majority of our infrastructure</strong> was affected by such an issue. It&rsquo;s not that difficult to do. Use data blocks freely and introduce modules as your terraform grows. In just a short time, you&rsquo;ll be in trouble, just like me!</p>
 <p>Let&rsquo;s see what such a disaster looks like:</p>
+<h3 id="imminent-doom-dont-hit-that-apply-button">Imminent Doom: Don&rsquo;t Hit That Apply Button</h3>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-hcl" data-lang="hcl"><span style="color:#75715e">######################################
 </span><span style="color:#75715e">## Imminent Doom: Data Block + Module + depends_on
 </span><span style="color:#75715e">######################################
@@ -220,7 +221,7 @@ SURGEON GENERAL'S WARNING: Quitting <span style="color: #111; font-family: serif
 
   depends_on <span style="color:#f92672">=</span> [<span style="color:#66d9ef">module</span>.<span style="color:#66d9ef">vnet</span>]
 }
-</code></pre></div><p>We have introduced a <code>vnet</code> module, which outputs the long, ugly subnet ID in a convenient and encapsulated way. Harmless, right? Let&rsquo;s look at what <code>terraform plan</code> tells us now:</p>
+</code></pre></div><p>We have introduced a <code>vnet</code> module, which outputs the long, ugly subnet ID into a convenient variable. And use it, of course. Harmless, right? Let&rsquo;s look at what <code>terraform plan</code> tells us now:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-hcl" data-lang="hcl"><span style="color:#75715e"># (the following is a partial `terraform plan` output)
 </span><span style="color:#75715e">
 </span><span style="color:#75715e"># resource.azurerm_network_interface.example must be replaced
@@ -229,7 +230,8 @@ SURGEON GENERAL'S WARNING: Quitting <span style="color: #111; font-family: serif
 </span><span style="color:#75715e">
 </span><span style="color:#75715e">  # ... (omitted)
 </span><span style="color:#75715e"></span>}
-</code></pre></div><p>The key phrase here, which has burned itself into my retinas and haunts me at night, is <code>-&gt; (known after apply) # forces replacement</code>. And congratulations, we&rsquo;re about to <strong>replace all our infrastructure</strong>!</p>
+</code></pre></div><p>The key phrase here that has burned itself into my retinas and haunts me at night is <code>-&gt; (known after apply) # forces replacement</code>. And congratulations, we&rsquo;re about to <strong>replace all our infrastructure</strong>!</p>
+<p>That&rsquo;s a bad thing.</p>
 <h4 id="explanation">Explanation</h4>
 <p>So let&rsquo;s walk through what happened, to the best of my understanding.</p>
 <ol>
@@ -242,25 +244,13 @@ SURGEON GENERAL'S WARNING: Quitting <span style="color: #111; font-family: serif
 <li>Anyway a big chunk of our infrastructure is now cursed by the dreaded <code>-&gt; (known after apply) # forces replacement</code> message.</li>
 <li>And though I haven&rsquo;t tested it, according to the GitHub Issue at <a href="https://github.com/hashicorp/terraform/issues/28377">https://github.com/hashicorp/terraform/issues/28377</a> - terraform is <strong>not bluffing</strong> and will indeed destroy and replace our resources.</li>
 </ol>
-<p>Let me attempt to explain this in a different way:</p>
-<ol>
-<li>SCENE: Cozy study. A leather chair sits next to the fireplace. Camera pans to the fireplace. A gun sits on the mantle. End Scene.</li>
-<li>Time passes.</li>
-<li>SCENE: Two nerds enter. Loud and angry argument about whether &lsquo;gitops is worth it&rsquo;. One stands by the fireplace. Picks up the gun, toggles the safety off, uses this as a metaphor for the relative safety of the additional gates/checks. Puts the gun back. End Scene.</li>
-<li>A great deal of time passes. Adventures!</li>
-<li>More adventures! More time passes!</li>
-<li>SCENE: &ldquo;&hellip;and so terraform apply works like this gun. Running <code>terraform apply</code> cocks the gun&rdquo; &hellip; (proceeds to cock the gun) &hellip; but nothing happens until you pull the trigger! See? It&rsquo;s totally safe.&quot; (puts the gun back on the mantle) &ldquo;No worries, the gun&rsquo;s not loaded, and what&rsquo;s more, the safety is on!&rdquo; (walks away) Camera pans to gun, lingers on it for a few seconds. End Scene.</li>
-<li>(much later) SCENE: Wildly gesticulating &ldquo;looK aT Me, i&rsquo;M FreeBSD!&rdquo; Picks up the gun, continues flailing wildly. &ldquo;POrts aND jailS!&rdquo; Gesticulates even more furiously. &ldquo;cHeCK OUt TheSE OBsCUre FIleSYStEms!&rdquo; Impassioned gesticulation crescendoes. Drops gun, which hits the floor. Gun fires.</li>
-</ol>
-<p>Friend, we&rsquo;ve just shot ourselves in the foot. I can&rsquo;t believe it either, but here we are.</p>
-<p>In this colorful allegory, data blocks are the gun. Everyone thinks it&rsquo;s harmless. And perhaps there&rsquo;s no real danger at first. But by the end of this (quite thrilling) movie, we&rsquo;ve shot ourselves. In my situation, I &lsquo;shot myself&rsquo; multiple times and hit roughly 40-70% of my body! And my point here is, while we see data blocks as harmless tools, we should treat them as <em>deadly weapons</em>.</p>
 <h4 id="alternate-explanations">Alternate Explanations</h4>
-<p>There are two succinct, authoritative answers on the GitHub Issue thread explaining what&rsquo;s happening, though to their detriment they do <em>not</em> fire any guns or reference a three-act structure in their explanations:</p>
+<p>There are two succinct, authoritative answers on the GitHub Issue thread explaining what&rsquo;s happening:</p>
 <ul>
 <li><a href="https://github.com/hashicorp/terraform/issues/28377#issuecomment-820398608">First explanation</a></li>
 <li><a href="https://github.com/hashicorp/terraform/issues/28377#issuecomment-824070018">Second explanation</a></li>
 </ul>
-<h4 id="solution">Solution</h4>
+<h4 id="solution-stop-using-data-blocks">Solution: Stop Using Data Blocks</h4>
 <p>One solution is to stop using data blocks. Here&rsquo;s the example, &lsquo;fixed&rsquo;:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-hcl" data-lang="hcl"><span style="color:#75715e">######################################
 </span><span style="color:#75715e">## The Path of Enlightenment: Not Relying On Data Blocks
@@ -276,13 +266,13 @@ SURGEON GENERAL'S WARNING: Quitting <span style="color: #111; font-family: serif
 </span><span style="color:#75715e"></span>}
 </code></pre></div><p>Before enlightenment: chop wood, carry water. After enlightenment: chop wood, carry water.</p>
 <p>And while I&rsquo;ve hardcoded the <code>subnet_id</code> in the enlightened example above, I would (and certainly have) extracted out either a <code>local</code> variable or a module-level <code>var</code>. And there&rsquo;s certainly a guiding principle as to when to extract variables, but &hellip; (handwaving) go read a book.</p>
-<h4 id="alternate-solutions">Alternate Solutions</h4>
+<h4 id="alternate-solutions-import-everything-stop-using-depends_on">Alternate Solutions: Import Everything, Stop Using depends_on</h4>
 <p>There are several real, alternate solutions to consider when dealing with data blocks.</p>
 <ul>
 <li>Import the resource into terraform, so you can replace the data block with a <code>resource</code>. Pinocchio is a real boy now! A real boy who is managed by Terraform, with all that entails. This is probably the best solution, so long as you&rsquo;re able to make it happen.</li>
 <li>As the GitHub Issue mentions, avoid <code>depends_on</code>, especially if you don&rsquo;t need it.</li>
 </ul>
-<h4 id="more-alternate-solutions">More Alternate &ldquo;Solutions&rdquo;</h4>
+<h4 id="more-solutions">More &ldquo;Solutions&rdquo;</h4>
 <p>Here are some other things to consider.</p>
 <ul>
 <li>&ldquo;Hello, Pulumi Incorporated? Yes? I hear you like both <strong>customers</strong> and <strong>money</strong>? Yes? That&rsquo;s great! I&rsquo;ll be right over!&rdquo;</li>
@@ -292,7 +282,7 @@ SURGEON GENERAL'S WARNING: Quitting <span style="color: #111; font-family: serif
 <p>I have several things to say:</p>
 <ol>
 <li>Political advocacy: I blame HashiCorp for casually tossing data blocks around in the documentation. Put a stern warning in there, Hashicorp. These things are <em>productivity landmines</em>.</li>
-<li>Hashicorp: seriously, these things are dangerous. <code>terraform validate</code> should warn me for every single data block I use. Sure, some data blocks can be used safely, as can some sticks of dynamite. But let&rsquo;s put some guardrails on these things, okay?</li>
+<li>Hashicorp: seriously, these things are dangerous. <code>terraform validate</code> should warn me for every single data block I use. Sure, some data blocks can be used safely, as can sticks of dynamite. But let&rsquo;s put some guardrails on these things, okay?</li>
 <li>Am I missing something? I feel like I&rsquo;m missing something obvious, and I wasted all this time writing up the issue, when (<em>insert your simple explanation</em>). Seriously, let me know if I&rsquo;m doing something wrong. @pseale on twitter or <code>peter</code> <code>@</code> <code>pseale.com</code>.</li>
 </ol>
 <h4 id="tldr-with-bullet-points-and-few-words">tl;dr with bullet points and few words</h4>
@@ -321,7 +311,7 @@ SURGEON GENERAL'S WARNING: Quitting <span style="color: #111; font-family: serif
   <title>calendar</title>
   <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line>
 </svg>
-                  Apr 1, 2022
+                  
                 </div>
               </div>
             </header>
@@ -335,7 +325,8 @@ SURGEON GENERAL'S WARNING: Quitting <span style="color: #111; font-family: serif
 <li>boring, specialized topics that target 1% of you. 99% of you will be totally bored, but the remaining 1% will weep for joy</li>
 </ul>
 <h3 id="introduction-what-is-wsl-and-how-is-it-useful">Introduction: What is WSL, and how is it useful?</h3>
-<p>WSL is the Windows Subsystem for Linux, and I use it to:</p>
+<p>WSL, the Windows Subsystem for Linux, is a <strong>surprisingly easy-to-install, convenient</strong> way to run Linux on Windows.</p>
+<p>I use WSL to:</p>
 <ul>
 <li>ssh</li>
 <li>test and develop shell scripts</li>
@@ -344,16 +335,22 @@ SURGEON GENERAL'S WARNING: Quitting <span style="color: #111; font-family: serif
 <li>run Windows-incompatible tools - most notably, TUIs like <code>tig</code> don&rsquo;t run in Windows</li>
 <li>configure neovim plugins for 7-20 hours every week (this is a joke, don&rsquo;t hurt me)</li>
 </ul>
-<p>All of these things can be done without WSL, but it&rsquo;s <strong>less effort</strong> to go with the flow and say, run ssh as nature intended. As a good, real example, every complex <code>kubectl</code> script I&rsquo;ve seen was written in bash. You can convert those scripts to PowerShell, or you can somehow run bash directly on Windows&hellip;but why? <strong>It&rsquo;s easier in WSL</strong>.</p>
-<p>WSL is also well-isolated, such that I have already installed, deleted, reinstalled, and re-reinstalled distros without issue. In other words, WSL doesn&rsquo;t do spooky things to your host like 👻👻👻cygwin👻👻👻 does. Spoken in love, cygwin.</p>
+<p>All of these things can be done without WSL, but it&rsquo;s <strong>less effort</strong> to go with the flow and say, run ssh as nature intended. As a real example, every complex <code>kubectl</code> script I&rsquo;ve seen was written in bash. And sure, you can convert those scripts to PowerShell, or you can somehow run bash directly on Windows&hellip;but why? <strong>It&rsquo;s easier in WSL</strong>.</p>
+<p>WSL is also well-isolated, such that I have already installed, deleted, migrated, reinstalled, and re-reinstalled distros without issue. In other words, WSL doesn&rsquo;t do spooky things to your host like 👻👻👻cygwin👻👻👻 does. Spoken in love, cygwin.</p>
 <h3 id="installing-wsl-itself">Installing: WSL itself</h3>
 <p>As of 2022, installing WSL2 is as simple as running (as Administrator) <code>wsl --install</code> if you&rsquo;re lucky. Read this if you&rsquo;re not lucky: <a href="https://docs.microsoft.com/en-us/windows/wsl/install#install">https://docs.microsoft.com/en-us/windows/wsl/install#install</a></p>
-<p>You will need to Enable Virtualization in your BIOS if it isn&rsquo;t already enabled. Good luck. Everyone&rsquo;s BIOS is different. These instructions are pretty good? <a href="https://bce.berkeley.edu/enabling-virtualization-in-your-pc-bios.html">https://bce.berkeley.edu/enabling-virtualization-in-your-pc-bios.html</a> - anyway my expert technique to access the BIOS menu is to reboot and use both hands to repeatedly tap <code>Del</code>, <code>F1</code>, <code>F2</code>, <code>F8</code>, <code>F9</code>, <code>F12</code> all together, as quickly as possible, while thinking happy thoughts.</p>
+<p>You will need to Enable Virtualization in your BIOS if it isn&rsquo;t already enabled. Good luck. Everyone&rsquo;s BIOS is different. These instructions are good: <a href="https://bce.berkeley.edu/enabling-virtualization-in-your-pc-bios.html">https://bce.berkeley.edu/enabling-virtualization-in-your-pc-bios.html</a>. Personally, my expert technique to access the BIOS menu is to reboot and use both hands to repeatedly tap <code>Del</code>, <code>F1</code>, <code>F2</code>, <code>F8</code>, <code>F9</code>, <code>F12</code> all together like a complex piano chord, as quickly as possible, while thinking happy thoughts.</p>
 <p>Beware of older, outdated instructions for installing WSL1 and even WSL2. And in full disclosure, I&rsquo;m writing this sentence in April 2022, and I&rsquo;m sure my instructions will similarly fall out of date. In the future you&rsquo;ll spend 45 minutes begging your Windows Store Personal GAN Shopping Assistant to install WSL, and it won&rsquo;t, of course. Anyway good luck in the future.</p>
 <h3 id="installing-a-linux-distro">Installing: a linux distro</h3>
 <p>Installing a specific distro happens through the Windows Store. I don&rsquo;t know why, either. Maybe forcing die-hard CLI advocates to install their favorite GPL-licensed distro through the comically commercialized Windows Store is a kind of joke? Well, intentional or no, it&rsquo;s hilarious.</p>
 <p>If you don&rsquo;t know which distro to install, <strong>pick the most recent version of Ubuntu.</strong> And if you think you want to argue with this deliberately simplistic advice, then you are <strong>definitely</strong> not the target audience for it. Go in peace.</p>
-<h3 id="surprisingly-useful-things">Surprisingly useful things</h3>
+<p>I should also point out that you can use the CLI to install a limited selection of distros:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-powershell" data-lang="powershell"><span style="color:#75715e"># list available distros - more are available through the Windows Store than here</span>
+wsl --list --online
+
+<span style="color:#75715e"># install kali-linux</span>
+wsl --install -d kali-linux
+</code></pre></div><h3 id="surprisingly-useful-things">Surprisingly useful things</h3>
 <p>WSL can launch Windows programs and use them in pipelines. There are some great things you can do with this <em>synergy</em>:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e"># launch Windows Explorer here - three ways</span>
 cmd.exe /c start .
@@ -422,9 +419,10 @@ wsl -- echo <span style="color:#e6db74">&#34;WSL distro: </span><span style="col
 <span style="color:#75715e"># this echoes back      WSL Distro: ${WSL_DISTRO_NAME}</span>
 wsl --exec echo <span style="color:#e6db74">&#34;WSL Distro: </span><span style="color:#ae81ff">`$</span><span style="color:#e6db74">{WSL_DISTRO_NAME}&#34;</span>
 </code></pre></div><h3 id="seamless-text-editing-vs-code">Seamless Text Editing: VS Code</h3>
-<p>VS Code (running in Windows) seamlessly edits files in WSL2, so long as you&rsquo;ve installed either of the <code>Remote - WSL</code> or <code>Remote Development</code> extensions.</p>
-<p>To painlessly launch the current directory in WSL, do:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ code .
+<p>VS Code (running in Windows) seamlessly edits files in WSL2, so long as you&rsquo;ve installed either the <code>Remote - WSL</code> extension, or the <code>Remote Development</code> extension.</p>
+<p>To painlessly launch VS Code from within the WSL filesystem, do the same as anywhere else:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e"># In WSL, this works the same for the end-user (you), but does very different things under the hood</span>
+code .
 </code></pre></div><h3 id="seamless-terminal-experience-windows-terminal">Seamless Terminal Experience: Windows Terminal</h3>
 <p>I launch the Ubuntu 20.04 shell in a new tab in Windows Terminal with <code>CTRL</code> + <code>SHIFT</code> + <code>2</code>. Windows Terminal is highly configurable, so your hotkeys may vary.</p>
 <p>Small nitpick: there are occasional display bugs in Windows Terminal. I&rsquo;ve noticed too&ndash;it&rsquo;s not just you.</p>
@@ -481,7 +479,7 @@ wsl --exec echo <span style="color:#e6db74">&#34;WSL Distro: </span><span style=
   <title>calendar</title>
   <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line>
 </svg>
-                  Mar 18, 2022
+                  
                 </div>
               </div>
             </header>
@@ -547,7 +545,7 @@ wsl --exec echo <span style="color:#e6db74">&#34;WSL Distro: </span><span style=
   <title>calendar</title>
   <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line>
 </svg>
-                  Jan 1, 2022
+                  
                 </div>
               </div>
             </header>

@@ -1,0 +1,199 @@
+<html>
+<head>
+  <title>ASCII Birds</title>
+  <link rel="stylesheet" href="reset.css" />
+  <style>
+    .button {
+      clear: left;
+      cursor: pointer;
+      display: inline-block;
+    }
+
+    .small-button {
+      cursor: pointer;
+    }
+
+    .button:hover, .small-button:hover {
+      background-color: yellow;
+    }
+
+    .active-button {
+      color: yellow;
+      background-color: cyan;
+    }
+
+    #title {
+      font-size: 8px;
+    }
+
+    #game-screen, #help-screen {
+      display: none;
+    }
+
+    .trajectory {
+      background-color: cyan;
+    }
+
+    .collision {
+      background-color: red;
+    }
+
+    .game-over-alert {
+      color: red;
+      background-color: black;
+    }
+
+    #error-report {
+      color: red;
+    }
+
+    .scoreboard {
+      color: yellow;
+      background-color: black;
+    }
+
+    .looks-like-hyperlink {
+      color: blue;
+      text-decoration: underline;
+    }
+
+    .help-bar {
+    }
+  </style>
+</head>
+<body>
+
+
+<div id="title-screen">
+<pre id="title">                                                                                                                                                                                          
+                                                                                                                                                                                          
+               AAA                 SSSSSSSSSSSSSSS         CCCCCCCCCCCCCIIIIIIIIIIIIIIIIIII     BBBBBBBBBBBBBBBBB   IIIIIIIIIIRRRRRRRRRRRRRRRRR   DDDDDDDDDDDDD           SSSSSSSSSSSSSSS 
+              A:::A              SS:::::::::::::::S     CCC::::::::::::CI::::::::I::::::::I     B::::::::::::::::B  I::::::::IR::::::::::::::::R  D::::::::::::DDD      SS:::::::::::::::S
+             A:::::A            S:::::SSSSSS::::::S   CC:::::::::::::::CI::::::::I::::::::I     B::::::BBBBBB:::::B I::::::::IR::::::RRRRRR:::::R D:::::::::::::::DD   S:::::SSSSSS::::::S
+            A:::::::A           S:::::S     SSSSSSS  C:::::CCCCCCCC::::CII::::::III::::::II     BB:::::B     B:::::BII::::::IIRR:::::R     R:::::RDDD:::::DDDDD:::::D  S:::::S     SSSSSSS
+           A:::::::::A          S:::::S             C:::::C       CCCCCC  I::::I   I::::I         B::::B     B:::::B  I::::I    R::::R     R:::::R  D:::::D    D:::::D S:::::S            
+          A:::::A:::::A         S:::::S            C:::::C                I::::I   I::::I         B::::B     B:::::B  I::::I    R::::R     R:::::R  D:::::D     D:::::DS:::::S            
+         A:::::A A:::::A         S::::SSSS         C:::::C                I::::I   I::::I         B::::BBBBBB:::::B   I::::I    R::::RRRRRR:::::R   D:::::D     D:::::D S::::SSSS         
+        A:::::A   A:::::A         SS::::::SSSSS    C:::::C                I::::I   I::::I         B:::::::::::::BB    I::::I    R:::::::::::::RR    D:::::D     D:::::D  SS::::::SSSSS    
+       A:::::A     A:::::A          SSS::::::::SS  C:::::C                I::::I   I::::I         B::::BBBBBB:::::B   I::::I    R::::RRRRRR:::::R   D:::::D     D:::::D    SSS::::::::SS  
+      A:::::AAAAAAAAA:::::A            SSSSSS::::S C:::::C                I::::I   I::::I         B::::B     B:::::B  I::::I    R::::R     R:::::R  D:::::D     D:::::D       SSSSSS::::S 
+     A:::::::::::::::::::::A                S:::::SC:::::C                I::::I   I::::I         B::::B     B:::::B  I::::I    R::::R     R:::::R  D:::::D     D:::::D            S:::::S
+    A:::::AAAAAAAAAAAAA:::::A               S:::::S C:::::C       CCCCCC  I::::I   I::::I         B::::B     B:::::B  I::::I    R::::R     R:::::R  D:::::D    D:::::D             S:::::S
+   A:::::A             A:::::A  SSSSSSS     S:::::S  C:::::CCCCCCCC::::CII::::::III::::::II     BB:::::BBBBBB::::::BII::::::IIRR:::::R     R:::::RDDD:::::DDDDD:::::D  SSSSSSS     S:::::S
+  A:::::A               A:::::A S::::::SSSSSS:::::S   CC:::::::::::::::CI::::::::I::::::::I     B:::::::::::::::::B I::::::::IR::::::R     R:::::RD:::::::::::::::DD   S::::::SSSSSS:::::S
+ A:::::A                 A:::::AS:::::::::::::::SS      CCC::::::::::::CI::::::::I::::::::I     B::::::::::::::::B  I::::::::IR::::::R     R:::::RD::::::::::::DDD     S:::::::::::::::SS 
+AAAAAAA                   AAAAAAASSSSSSSSSSSSSSS           CCCCCCCCCCCCCIIIIIIIIIIIIIIIIIII     BBBBBBBBBBBBBBBBB   IIIIIIIIIIRRRRRRRR     RRRRRRRDDDDDDDDDDDDD         SSSSSSSSSSSSSSS   
+                                                                                                                                                                                          
+                                                                                                                                                                                          
+                                                                                                                                                                                          
+                                                                                                                                                                                          
+                                                                                                                                                                                          
+                                                                                                                                                                                          
+                                                                                                                                                                                          
+</pre>
+
+  <div id="start-button" class="button">
+    xxxxxxxxxxx<br />
+    x&nbsp;&nbsp;<span class='looks-like-hyperlink'>START</span>&nbsp;&nbsp;x<br />
+    xxxxxxxxxxx
+  </div>
+</div>
+
+
+<div id="game-screen">
+  <pre id="screen"></pre>
+
+  <div id="command-bar">
+    <table>
+      <tr>
+        <td>
+          <div class="small-button" id="power-0-move">
+            xxx<br />
+            x<span class='looks-like-hyperlink'>0</span>x<br />
+            xxx
+          </div>
+        </td>
+        <td>&nbsp;</td>
+        <td>
+          <div class="small-button"  id="power-1-move">
+            xxx<br />
+            x<span class='looks-like-hyperlink'>1</span>x<br />
+            xxx
+          </div>
+        </td>
+        <td>&nbsp;</td>
+        <td>
+          <div class="small-button"  id="power-2-move">
+            xxx<br />
+            x<span class='looks-like-hyperlink'>2</span>x<br />
+            xxx
+          </div>
+        </td>
+        <td>&nbsp;</td>
+        <td>
+          <div class="small-button"  id="power-3-move">
+            xxx<br />
+            x<span class='looks-like-hyperlink'>3</span>x<br />
+            xxx
+          </div>
+        </td>
+        <td>&nbsp;</td>
+        <td>
+          <div class="small-button"  id="power-4-move">
+            xxx<br />
+            x<span class='looks-like-hyperlink'>4</span>x<br />
+            xxx
+          </div>
+        </td>
+      </tr>
+    </table>
+  </div>
+  <br />
+  <div id="quit-button" class="button">
+    xxxxxxxxxxx<br />
+    x&nbsp;&nbsp;<span class='looks-like-hyperlink'>QUIT</span>&nbsp;&nbsp;&nbsp;x<br />
+    xxxxxxxxxxx
+  </div>
+
+</div>
+
+
+<div class='help-bar'>
+  <br />
+  <a id="help-link" href="help/">(?) HOW TO PLAY</a>
+</div>
+
+
+<div id="error-report"></div>
+
+
+<div id="help-screen">
+  <div style="display: inline-block;">
+    <div style="width: 100%; text-align: center;">
+      <div id="help-content">
+      </div>
+      <div id="close-button" class="button">
+        xxxxxxxxxxx<br />
+        x&nbsp;&nbsp;<span class='looks-like-hyperlink'>CLOSE</span>&nbsp;&nbsp;x<br />
+        xxxxxxxxxxx
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="javascripts/lib/jquery.min.js"></script>
+<script src="javascripts/lib/mousetrap.min.js"></script>
+<script src="javascripts/lib/lodash.min.js"></script>
+<script src="javascripts/lib/class.js"></script>
+<script src="javascripts/core/SharedFunctions.js"></script>
+<script src="javascripts/core/AsciiBirds.js"></script>
+<script src="javascripts/core/PillarGenerator.js"></script>
+<script src="javascripts/core/Pillar.js"></script>
+<script src="javascripts/core/GameController.js"></script>
+<script src="javascripts/core/TrajectoryCalculator.js"></script>
+<script src="javascripts/core/MoveCommand.js"></script>
+<script src="javascripts/core/ViewPortCreator.js"></script>
+<script src="javascripts/core/ScreenFormatter.js"></script>
+<script src="index.js"></script>
+</body>
+</html>
